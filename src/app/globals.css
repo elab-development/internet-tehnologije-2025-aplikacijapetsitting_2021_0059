@@ -26,6 +26,7 @@ h1 {
 /* Dugmad */
 button {
   padding: 10px 16px;
+  margin-top: 10px;
   background-color: #2563eb;
   color: white;
   border: none;
@@ -65,10 +66,21 @@ main {
   border-radius: 8px;
 }
 
+h4 {
+  cursor: pointer;
+  margin: auto;
+  font-size: 22px;
+  font-weight: 300;
+  transition: font-weight 250ms ease-in-out;
+}
+h4:hover {
+   font-weight: 900;
+}
 /* Naslovi */
 h1 {
   margin-bottom: 20px;
 }
+
 
 /* Dugmad */
 button {
