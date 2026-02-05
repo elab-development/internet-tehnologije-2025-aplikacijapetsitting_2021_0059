@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import Input from "../components/Input";
+import Button from "../components/Button";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -17,25 +19,10 @@ export default function LoginPage() {
       <h1>Prijava</h1>
 
       <form onSubmit={handleSubmit} style={{ maxWidth: "400px" }}>
-        <div>
-          <label>Email</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-
-        <div>
-          <label>Lozinka</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-
-        <button type="submit">Prijavi se</button>
+       <Input label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)}/>
+       <Input label="Lozinka" type="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
+        
+       <Button text="Prijavi se" type="submit" />
       </form>
     </main>
   );

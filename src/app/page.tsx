@@ -1,5 +1,5 @@
 import Image from "next/image";
-
+import AdCard from "./components/AdCard";
 
 
 type Ad = {
@@ -26,16 +26,11 @@ export default function Home() {
           <div
             key={ad.id}
             style={{
-              border: "1px solid #ccc",
               padding: "12px",
               marginBottom: "10px",
             }}
           >
-            <h3>{ad.opis}</h3>
-            <p>Ljubimac: {ad.ljubimac}</p>
-            <p>Termin čuvanja: {ad.terminCuvanja}</p>
-            <p>Tip usluge: {ad.tipUsluge}</p>
-            <p>Novčana naknada: {ad.naknada}</p>
+             <AdCard key={ad.id} opis={ad.opis} ljubimac={ad.ljubimac} tipUsluge={ad.tipUsluge} terminCuvanja={ad.terminCuvanja} naknada={ad.naknada}/>
           </div>
         ))}
       </div>
