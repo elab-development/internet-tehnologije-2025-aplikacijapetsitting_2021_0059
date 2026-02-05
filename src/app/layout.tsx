@@ -28,7 +28,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <div className="bg-red-500 font-bold text-white">
-          pocetak layout-a 
+          
         </div>
         {children}
       </body>
