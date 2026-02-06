@@ -27,7 +27,7 @@ export default function Home() {
       <div style={{ marginTop: "20px" }}>
         {ads.map((ad) => (
           <div
-           
+            key={ad.id}
             style={{
               border: "1px solid #ccc",
               padding: "12px",
