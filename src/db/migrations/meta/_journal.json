@@ -8,6 +8,13 @@
       "when": 1770386286341,
       "tag": "0000_square_starhawk",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1770390684892,
+      "tag": "0001_faithful_talos",
+      "breakpoints": true
     }
   ]
 }
