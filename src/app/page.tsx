@@ -1,25 +1,49 @@
-import AdCard from "./components/AdCard";
+"use client"
+
+import { useEffect, useState } from "react";
+import AdCard, { Korisnik, Ljubimac, TipUsluge } from "./components/AdCard";
 import Button from "./components/Button";
 
 
 
 type Ad = {
-  id: number;
-  korisnik: string;
+  id: string;
+  korisnik: Korisnik;
   opis: string;
-  ljubimac: string;
-  tipUsluge: string;
+  ljubimac: Ljubimac;
+  tipUsluge: TipUsluge;
   terminCuvanja: string;
   naknada: string;
 };
 
-const ads: Ad[] = [
-  { id: 1, korisnik: "Sara", opis: "Čuvanje psa", ljubimac: "Pas", tipUsluge: "Čuvanje", terminCuvanja: "12.02.2026 od 17h", naknada: "500 din po satu" },
-  { id: 2, korisnik: "Mario", opis: "Šetnja psa", ljubimac: "Pas", tipUsluge: "Šetnja", terminCuvanja: "12.02.2026 od 20h", naknada: "500 din" },
-];
 
 export default function Home() {
-  
+
+  const [ads, setAds] = useState<Ad[]>([]);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchAds = async () => {
+      try {
+        const res = await fetch("/api/oglas");
+
+        if (!res.ok) {
+          throw new Error("Greška pri učitavanju oglasa");
+        }
+
+        const data = await res.json();
+        setAds(data);
+      } catch (err) {
+        setError("Ne mogu da učitam oglase");
+      }
+    };
+
+    fetchAds();
+  }, []);
+
+  if (error) return <p>{error}</p>;
+  if (ads.length === 0) return <p>Učitavanje...</p>;
+
    return (
     <main style={{ padding: "20px" }}>
       <h1>Oglasi</h1>

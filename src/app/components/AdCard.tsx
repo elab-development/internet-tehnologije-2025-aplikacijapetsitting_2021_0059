@@ -1,8 +1,37 @@
-type AdCardProps = {
-  korisnik: string;
+import Link from "next/link";
+
+export type Korisnik = {
+  id: string;
+  ime: string;
+  prezime: string;
+};
+
+export type Ljubimac = {
+  id: string;
+  ime: string;
+  vrsta: string;
+};
+
+export type TipUsluge = {
+  id: string;
+  ime: string;
+};
+
+export type Ad = {
+  id: string;
   opis: string;
-  ljubimac: string;
-  tipUsluge: string;
+  tipUsluge: TipUsluge;
+  terminCuvanja: string;
+  naknada: string;
+  korisnik: Korisnik;
+  ljubimac: Ljubimac;
+};
+
+type AdCardProps = {
+  korisnik: Korisnik;
+  opis: string;
+  ljubimac: Ljubimac;
+  tipUsluge: TipUsluge;
   terminCuvanja: string;
   naknada: string;
 };
@@ -10,11 +39,16 @@ type AdCardProps = {
 export default function AdCard({ korisnik, opis, ljubimac, tipUsluge, terminCuvanja, naknada }: AdCardProps) {
   return (
     <div className="card">
-        <h4>{korisnik}</h4>
+        
+          <Link href={`/profile/${korisnik.id}`}>
+           <h4>{korisnik.ime}</h4>
+        </Link>
+
+        
         <h3>{opis}</h3>
-        <p>Ljubimac: {ljubimac}</p>
+        <p>Ljubimac: {ljubimac.ime}</p>
         <p>Termin čuvanja: {terminCuvanja}</p>
-        <p>Tip usluge: {tipUsluge}</p>
+        <p>Tip usluge: {tipUsluge.ime}</p>
         <p>Novčana naknada: {naknada}</p>
     </div>
   );

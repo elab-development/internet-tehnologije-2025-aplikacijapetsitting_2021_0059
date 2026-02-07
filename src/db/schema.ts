@@ -1,4 +1,5 @@
 
+import { relations } from "drizzle-orm";
 import { dateDuration } from "drizzle-orm/gel-core";
 import {pgTable, serial, varchar, integer, timestamp, uuid, doublePrecision, date, pgEnum} from "drizzle-orm/pg-core";
 
@@ -58,3 +59,18 @@ export const prijava = pgTable("prijava", {
   idKorisnik: uuid("idKorisnik").notNull().references(() => korisnik.id),
   idOglas: uuid("idOglas").notNull().references(() => oglas.id),
 });
+
+export const oglasRelations = relations(oglas, ({ one }) => ({
+  korisnik: one(korisnik, {
+    fields: [oglas.idKorisnik],
+    references: [korisnik.id],
+  }),
+  ljubimac: one(ljubimac, {
+    fields: [oglas.idLjubimac],
+    references: [ljubimac.id],
+  }),
+   tipUsluge: one(tipUsluge, {
+    fields: [oglas.idTipUsluge],
+    references: [tipUsluge.id],
+  }),
+}));

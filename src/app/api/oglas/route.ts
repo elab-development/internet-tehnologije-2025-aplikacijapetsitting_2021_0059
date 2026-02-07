@@ -1,11 +1,35 @@
 import { db } from "@/db";
 import { oglas } from "@/db/schema";
+import { NextResponse } from "next/server";
 
 
 //GET svi oglasi
 export async function GET() {
-  const allAds = await db.select().from(oglas);
-  return Response.json(allAds);
+ const allAds = await db.query.oglas.findMany({
+    with: {
+      korisnik: {
+        columns: {
+          id: true,
+          ime: true,
+          prezime: true,
+        },
+      },
+      ljubimac: {
+        columns: {
+          id: true,
+          ime: true
+        },
+      },
+       tipUsluge: {
+        columns: {
+          id: true,
+          ime: true
+        },
+     
+    },
+  }});
+
+  return NextResponse.json(allAds);
 }
 
 //POST novi oglas
