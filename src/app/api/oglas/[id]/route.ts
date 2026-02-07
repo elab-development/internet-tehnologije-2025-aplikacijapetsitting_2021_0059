@@ -1,12 +1,18 @@
 import { db } from "@/db";
 import { oglas } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { NextRequest } from "next/server";
 
 
 //GET jedan oglas
-export async function GET( req: Request, { params }: { params: { id: string } }) {
+
+
+
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+
   const ad = await db.query.oglas.findFirst({
-    where: eq(oglas.id, params.id),
+    where: eq(oglas.id, id),
   });
 
   if (!ad) {
