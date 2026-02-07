@@ -15,3 +15,9 @@ export async function GET( req: Request, { params }: { params: { id: string } })
 
   return Response.json(user);
 }
+
+//DELETE korisnik po ID-ju
+export async function DELETE( req: Request, { params }: { params: { id: string } }) {
+  await db.delete(korisnik).where(eq(korisnik.id, params.id));
+  return Response.json({ success: true });
+}
