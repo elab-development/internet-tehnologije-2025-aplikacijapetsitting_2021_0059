@@ -15,6 +15,8 @@ export const korisnik = pgTable("korisnik", {
     grad:       varchar("grad",  { length: 100 }).notNull(),
     opstina:       varchar("opstina",  { length: 100 }).notNull(),
     prosecnaOcena: doublePrecision("prosecna_ocena").notNull(),
+
+    uloga: varchar("uloga", {length: 100}).notNull().default("Vlasnik"),
 });
 
 //Oglas

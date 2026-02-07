@@ -44,8 +44,10 @@ export default function Home() {
   if (error) return <p>{error}</p>;
   if (ads.length === 0) return <p>Učitavanje...</p>;
 
+  
    return (
     <main style={{ padding: "20px" }}>
+      
       <h1>Oglasi</h1>
 
       <div style={{ marginTop: "20px" }}>
@@ -59,6 +61,7 @@ export default function Home() {
               marginTop: "10px"
             }}
           >
+            
              <AdCard key={ad.id} korisnik={ad.korisnik} opis={ad.opis} ljubimac={ad.ljubimac} tipUsluge={ad.tipUsluge} terminCuvanja={ad.terminCuvanja} naknada={ad.naknada}/>
              <Button text="Prijavi se" type="submit" />
           </div>

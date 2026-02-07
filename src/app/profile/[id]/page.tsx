@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
     ime: string;
     prezime: string;
     email: string;
-   // datumRodjenja: string;
+    datumRodjenja: string;
     grad: string;
     opstina: string;
     brojTelefona: string;
@@ -46,10 +46,10 @@ export default function ProfilePage({ params }: Props) {
     <main style={{ padding: "20px" }}>
       <h1>Profil korisnika</h1>
 
-      <p><strong>Ime:</strong> {user.ime}</p>
+      <p><strong>Ime:</strong> {user.ime} {user.prezime}</p>
       <p><strong>Email:</strong> {user.email}</p>
-
-      <p><strong>Grad i opština:</strong> {user.grad} {"(" + user.opstina + ")"}</p>
+      <p><strong>Datum rođenja:</strong> {user.datumRodjenja}</p>
+      <p><strong>Grad:</strong> {user.grad} {"(" + user.opstina + ")"}</p>
       <p><strong>Broj telefona:</strong> {user.brojTelefona}</p>
     </main>
   );

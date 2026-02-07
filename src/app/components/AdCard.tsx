@@ -9,7 +9,7 @@ export type Korisnik = {
 export type Ljubimac = {
   id: string;
   ime: string;
-  vrsta: string;
+  tip: string;
 };
 
 export type TipUsluge = {
@@ -36,20 +36,25 @@ type AdCardProps = {
   naknada: string;
 };
 
+
 export default function AdCard({ korisnik, opis, ljubimac, tipUsluge, terminCuvanja, naknada }: AdCardProps) {
   return (
+    
     <div className="card">
         
-          <Link href={`/profile/${korisnik.id}`}>
+          <Link href={`/profile/${korisnik.id}`} 
+          style={{ textDecoration: "none", color: "inherit" }}>
            <h4>{korisnik.ime}</h4>
         </Link>
 
+
         
         <h3>{opis}</h3>
-        <p>Ljubimac: {ljubimac.ime}</p>
+        <p>Ljubimac: {ljubimac.ime } ,  {ljubimac.tip}</p>
         <p>Termin čuvanja: {terminCuvanja}</p>
         <p>Tip usluge: {tipUsluge.ime}</p>
         <p>Novčana naknada: {naknada}</p>
     </div>
   );
+  
 }

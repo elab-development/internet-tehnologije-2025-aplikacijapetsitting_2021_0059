@@ -17,7 +17,8 @@ export async function GET() {
       ljubimac: {
         columns: {
           id: true,
-          ime: true
+          ime: true,
+          tip: true,
         },
       },
        tipUsluge: {
