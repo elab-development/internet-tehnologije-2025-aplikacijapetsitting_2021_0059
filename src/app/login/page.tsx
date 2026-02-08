@@ -1,4 +1,10 @@
-"use client";
+import AuthForm from "../components/AuthForm";
+
+export default function LoginPage() {
+   return <AuthForm mode="login" />;
+}
+
+/*"use client";
 
 import { useState } from "react";
 import Input from "../components/Input";
@@ -26,4 +32,4 @@ export default function LoginPage() {
       </form>
     </main>
   );
-}
+}*/
