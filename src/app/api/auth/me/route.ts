@@ -22,7 +22,8 @@ export async function GET() {
          const [u] = await db.select({
                  id: korisnik.id,
                  ime: korisnik.ime,
-                 email: korisnik.email
+                 email: korisnik.email,
+                 uloga: korisnik.uloga,
              })
              .from(korisnik)
              .where(eq(korisnik.id, claims.sub));

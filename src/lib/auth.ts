@@ -1,4 +1,9 @@
+import { db } from "@/db";
+import { korisnik } from "@/db/schema";
+import { eq } from "drizzle-orm";
 import * as jwt from "jsonwebtoken"
+import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
 
 export const AUTH_COOKIE = "auth"; //kreiramo cookie u kome cemo smestiti token
 const JWT_SECRET = process.env.JWT_SECRET!; // citamo secret iz env fajla

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
   type User = {
@@ -51,6 +52,11 @@ export default function ProfilePage({ params }: Props) {
       <p><strong>Datum rođenja:</strong> {user.datumRodjenja}</p>
       <p><strong>Grad:</strong> {user.grad} {"(" + user.opstina + ")"}</p>
       <p><strong>Broj telefona:</strong> {user.brojTelefona}</p>
+
+    <Link href="/profil/izmena">
+  <button>Izmeni profil</button>
+</Link>
     </main>
+    
   );
 }

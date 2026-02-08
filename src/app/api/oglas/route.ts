@@ -1,5 +1,8 @@
 import { db } from "@/db";
-import { oglas } from "@/db/schema";
+import { korisnik, oglas } from "@/db/schema";
+import { AUTH_COOKIE, verifyAuthToken } from "@/lib/auth";
+import { eq } from "drizzle-orm";
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 
@@ -33,10 +36,48 @@ export async function GET() {
   return NextResponse.json(allAds);
 }
 
+
 //POST novi oglas
 export async function POST(req: Request) {
-  const body = await req.json();
+  try {
+    const token = (await cookies()).get(AUTH_COOKIE)?.value;
+    if (!token) {
+      return NextResponse.json({ message: "Niste ulogovani" }, { status: 401 });
+    }
 
-  const newAd = await db.insert(oglas).values(body).returning();
-  return Response.json(newAd[0], { status: 201 });
-}
+    const claims = verifyAuthToken(token);
+
+    const user = await db.query.korisnik.findFirst({
+      where: eq(korisnik.id, claims.sub),
+    });
+
+    if (!user) {
+      return NextResponse.json({ message: "Korisnik ne postoji" }, { status: 401 });
+    }
+
+    const {
+      opis,
+      terminCuvanja,
+      naknada,
+      idLjubimac,
+      idTipUsluge,
+    } = await req.json();
+
+    if (!opis || !terminCuvanja || !naknada || !idLjubimac || !idTipUsluge) {
+      return NextResponse.json({ message: "Nedostaju podaci" }, { status: 400 });
+    }
+
+    await db.insert(oglas).values({
+      opis,
+      terminCuvanja, 
+      naknada: Number(naknada),
+      idKorisnik: user.id, 
+      idLjubimac,
+      idTipUsluge,
+    });
+
+    return NextResponse.json({ message: "Oglas dodat" }, { status: 201 });
+  } catch (err) {
+    console.error(err);
+    return NextResponse.json({ message: "Greška" }, { status: 500 });
+  }}

@@ -43,12 +43,10 @@ export default function AdCard({ korisnik, opis, ljubimac, tipUsluge, terminCuva
     <div className="card">
         
           <Link href={`/profile/${korisnik.id}`} 
-          style={{ textDecoration: "none", color: "inherit" }}>
+          style={{ textDecoration: "none", color: "inherit", marginBottom:"5px" }}>
            <h4>{korisnik.ime}</h4>
         </Link>
 
-
-        
         <h3>{opis}</h3>
         <p>Ljubimac: {ljubimac.ime } ,  {ljubimac.tip}</p>
         <p>Termin čuvanja: {terminCuvanja}</p>

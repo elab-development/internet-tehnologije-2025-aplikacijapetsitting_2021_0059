@@ -68,9 +68,14 @@ export default function Navbar() {
             boxShadow: "0 10px 25px rgba(0,0,0,0.15)",
             }}
         >
-            <div style={{ marginBottom: "8px", fontWeight: 500,textAlign: "center", }}>
+            <Link href={`/profile/${user.id}`} 
+          style={{ marginBottom: "8px", fontWeight: 500,textAlign: "center", }}>
+           <p>{user.ime}</p>
+        </Link>
+
+          {/*   <div style={{ marginBottom: "8px", fontWeight: 500,textAlign: "center", }}>
             {user?.ime}
-            </div>
+            </div> */}
 
             <button
             onClick={handleLogout}

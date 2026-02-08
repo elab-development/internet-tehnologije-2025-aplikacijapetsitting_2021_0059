@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import AdCard, { Korisnik, Ljubimac, TipUsluge } from "./components/AdCard";
 import Button from "./components/Button";
-
+import Link from "next/link";
 
 
 type Ad = {
@@ -47,8 +47,15 @@ export default function Home() {
   
    return (
     <main style={{ padding: "20px" }}>
-      
-      <h1>Oglasi</h1>
+      <div className="flex justify-end mb-4">
+         <Link href="/oglas">
+            <button className="rounded-md bg-indigo-600 h-10 w-30 px-4 py-2 text-white font-medium hover:bg-indigo-700 transition">
+             Dodaj oglas
+            </button>
+        </Link>
+      </div>
+
+
 
       <div style={{ marginTop: "20px" }}>
         {ads.map((ad) => (

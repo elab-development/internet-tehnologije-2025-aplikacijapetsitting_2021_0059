@@ -10,7 +10,7 @@ export default function Button({
   type = "button",
 }: ButtonProps) {
   return (
-    <button type={type} onClick={onClick} className="btn">
+    <button type={type} onClick={onClick} className="btn" style={{marginTop: "10px"}}>
       {text}
     </button>
   );
