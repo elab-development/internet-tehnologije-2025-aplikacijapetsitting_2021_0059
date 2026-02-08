@@ -1,0 +1,388 @@
+{
+  "id": "63346461-8f2a-4a54-a231-7c4471c6c25c",
+  "prevId": "797c11d6-6308-4349-ba4e-1c7670942c78",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.korisnik": {
+      "name": "korisnik",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "ime": {
+          "name": "ime",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "prezime": {
+          "name": "prezime",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "''"
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "lozinka": {
+          "name": "lozinka",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "brojTelefona": {
+          "name": "brojTelefona",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "''"
+        },
+        "datumRodjenja": {
+          "name": "datumRodjenja",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'1900-01-01'"
+        },
+        "grad": {
+          "name": "grad",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "''"
+        },
+        "opstina": {
+          "name": "opstina",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "''"
+        },
+        "prosecna_ocena": {
+          "name": "prosecna_ocena",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "uloga": {
+          "name": "uloga",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Vlasnik'"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "korisnik_email_unique": {
+          "name": "korisnik_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.ljubimac": {
+      "name": "ljubimac",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "tip": {
+          "name": "tip",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ime": {
+          "name": "ime",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "datumRodjenja": {
+          "name": "datumRodjenja",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "alergije": {
+          "name": "alergije",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'/'"
+        },
+        "lekovi": {
+          "name": "lekovi",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'/'"
+        },
+        "ishrana": {
+          "name": "ishrana",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'/'"
+        },
+        "idKorisnik": {
+          "name": "idKorisnik",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ljubimac_idKorisnik_korisnik_id_fk": {
+          "name": "ljubimac_idKorisnik_korisnik_id_fk",
+          "tableFrom": "ljubimac",
+          "tableTo": "korisnik",
+          "columnsFrom": [
+            "idKorisnik"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.oglas": {
+      "name": "oglas",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "opis": {
+          "name": "opis",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "terminCuvanja": {
+          "name": "terminCuvanja",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "naknada": {
+          "name": "naknada",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "idKorisnik": {
+          "name": "idKorisnik",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "idLjubimac": {
+          "name": "idLjubimac",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "idTipUsluge": {
+          "name": "idTipUsluge",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "oglas_idKorisnik_korisnik_id_fk": {
+          "name": "oglas_idKorisnik_korisnik_id_fk",
+          "tableFrom": "oglas",
+          "tableTo": "korisnik",
+          "columnsFrom": [
+            "idKorisnik"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "oglas_idLjubimac_ljubimac_id_fk": {
+          "name": "oglas_idLjubimac_ljubimac_id_fk",
+          "tableFrom": "oglas",
+          "tableTo": "ljubimac",
+          "columnsFrom": [
+            "idLjubimac"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "oglas_idTipUsluge_tipUsluge_id_fk": {
+          "name": "oglas_idTipUsluge_tipUsluge_id_fk",
+          "tableFrom": "oglas",
+          "tableTo": "tipUsluge",
+          "columnsFrom": [
+            "idTipUsluge"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.prijava": {
+      "name": "prijava",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "status": {
+          "name": "status",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'U obradi'"
+        },
+        "ocena": {
+          "name": "ocena",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "idKorisnik": {
+          "name": "idKorisnik",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "idOglas": {
+          "name": "idOglas",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "prijava_idKorisnik_korisnik_id_fk": {
+          "name": "prijava_idKorisnik_korisnik_id_fk",
+          "tableFrom": "prijava",
+          "tableTo": "korisnik",
+          "columnsFrom": [
+            "idKorisnik"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "prijava_idOglas_oglas_id_fk": {
+          "name": "prijava_idOglas_oglas_id_fk",
+          "tableFrom": "prijava",
+          "tableTo": "oglas",
+          "columnsFrom": [
+            "idOglas"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.tipUsluge": {
+      "name": "tipUsluge",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "ime": {
+          "name": "ime",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

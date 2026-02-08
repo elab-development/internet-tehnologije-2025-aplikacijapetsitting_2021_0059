@@ -1,12 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 
 type Mode = "login" | "register";
 
 export default function AuthForm({ mode }: { mode: Mode }) {
+
+    const router = useRouter();
+
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [pwd, setPwd] = useState("");
+    const [role, setRole] = useState("");
 
     const [err, setErr] = useState("");
      const [loading, setLoading] = useState(false);
@@ -17,6 +25,47 @@ export default function AuthForm({ mode }: { mode: Mode }) {
              ? (["Niste registrovani?", "Registruj se", "/register"] as const)
              : (["Već imate nalog?", "Prijavi se", "/login"] as const);
 
+    //SUBMIT
+     const handleSubmit = async (e: FormEvent) => {
+         e.preventDefault();
+         setErr("");
+         setLoading(true);
+
+        
+
+         try {
+             const endpoint = mode === "login" ? "/api/auth/login" : "/api/auth/register"
+
+            const body = mode === "login" ? { email, password: pwd } : {ime: name, email, password: pwd, uloga: role,
+      };
+
+             const res = await fetch(endpoint, {
+                 method: "POST",
+                 credentials: "include", 
+                 headers: { "Content-Type": "application/json" },
+                 body: JSON.stringify(body), 
+             })
+
+             if (!res.ok) {
+                 let message = "Greska pri autentifikaciji";
+                 let data;
+                 try {
+                     data = await res.json();
+                     message = data?.error ?? message;
+                 } catch {
+                     message = (data as string) || message;
+                 }
+                 setErr(message);
+                 return;
+             }
+
+             router.refresh();
+             router.push("/");
+         } finally {
+             setLoading(false); 
+         }
+         }
+
      return (
   <div className="auth-page">
     <div className="auth-container">
@@ -26,17 +75,20 @@ export default function AuthForm({ mode }: { mode: Mode }) {
       </div>
 
       <div className="auth-box">
-        <form className="auth-form">
+        <form onSubmit={handleSubmit} className="auth-form">
           {mode === "register" && (
             <div>
               <label>Ime i prezime</label>
-              <input type="text" required />
+              <input type="text" required 
+              value={name} onChange={(e) => setName(e.target.value)}
+              />
             </div>
           )}
 
           <div>
             <label>Email adresa</label>
-            <input type="email" required />
+            <input type="email" required 
+            value={email} onChange={(e) => setEmail(e.target.value)}/>
           </div>
 
           <div>
@@ -44,6 +96,7 @@ export default function AuthForm({ mode }: { mode: Mode }) {
             <input
               type="password"
               required
+               value={pwd}  onChange={(e) => setPwd(e.target.value)}
               autoComplete={mode === "login" ? "current-password" : "new-password"}
             />
           </div>
@@ -53,13 +106,14 @@ export default function AuthForm({ mode }: { mode: Mode }) {
               <label>Izaberi ulogu</label>
               <div className="role-group">
                 <label>
-                  <input type="radio" name="uloga" value="OWNER" required />
+                  <input type="radio" name="uloga" value="Vlasnik"  checked={role === "Vlasnik"} onChange={(e) => setRole(e.target.value)} required />
                   Vlasnik ljubimca
                 </label>
 
+
                 <label>
                     
-                  <input type="radio" name="uloga" value="SITTER" />
+                  <input type="radio" name="uloga" value="Sitter" checked={role === "Sitter"} onChange={(e) => setRole(e.target.value)}/>
                   Pet sitter
                 </label>
               </div>
