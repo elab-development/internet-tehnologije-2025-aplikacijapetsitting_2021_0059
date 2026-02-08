@@ -1,3 +1,4 @@
+@import "tailwindcss";
 
 * {
   box-sizing: border-box;
@@ -13,21 +14,17 @@ body {
 
 main {
   max-width: 900px;
-  margin: 40px auto;
-  padding: 20px;
+   margin: 40px auto;
   background-color: #ffffff;
   border-radius: 8px;
 }
 
-/* Naslovi */
 h1 {
   margin-bottom: 20px;
 }
 
-/* Dugmad */
 button {
-  padding: 10px 16px;
-  margin-top: 10px;
+ 
   background-color: #2563eb;
   color: white;
   border: none;
@@ -39,7 +36,6 @@ button:hover {
   background-color: #1e4ed8;
 }
 
-/* Input polja */
 input {
   width: 100%;
   padding: 8px;
@@ -47,24 +43,6 @@ input {
   margin-bottom: 12px;
   border: 1px solid #ccc;
   border-radius: 4px;
-}* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: Arial, Helvetica, sans-serif;
-  background-color: #f5f7fa;
-  color: #333;
-}
-
-main {
-  max-width: 900px;
-  margin: 40px auto;
-  padding: 20px;
-  background-color: #ffffff;
-  border-radius: 8px;
 }
 
 h4 {
@@ -77,38 +55,9 @@ h4 {
 h4:hover {
    font-weight: 900;
 }
-/* Naslovi */
-h1 {
-  margin-bottom: 20px;
-}
-
-
-/* Dugmad */
-button {
-  padding: 10px 16px;
-  background-color: #2563eb;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #1e4ed8;
-}
-
-/* Input polja */
-input {
-  width: 100%;
-  padding: 8px;
-  margin-top: 4px;
-  margin-bottom: 12px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
 
 .auth-page {
-  min-height: 100vh;
+  
   display: flex;
   align-items: center;
   justify-content: center;
@@ -183,6 +132,6 @@ input {
 }
 
 .auth-header img {
-  display: block;       /* KLJUČNO */
-  margin: 0 auto 16px;  /* centrira sliku */
+  display: block;      
+  margin: 0 auto 16px;  
 }
