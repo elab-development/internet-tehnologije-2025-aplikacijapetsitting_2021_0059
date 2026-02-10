@@ -3,6 +3,8 @@
 import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Button from "./Button";
+import Input from "./Input";
 
 
 type Mode = "login" | "register";
@@ -67,7 +69,7 @@ export default function AuthForm({ mode }: { mode: Mode }) {
          }
 
      return (
-  <div className="auth-page">
+  <div className="auth-page" id="reg">
     <div className="auth-container">
       <div className="auth-header">
         <img src="/logo.png" alt="Šapa logo" width="120px" height="120px"/>
@@ -78,17 +80,12 @@ export default function AuthForm({ mode }: { mode: Mode }) {
         <form onSubmit={handleSubmit} className="auth-form">
           {mode === "register" && (
             <div>
-              <label>Ime i prezime</label>
-              <input type="text" required 
-              value={name} onChange={(e) => setName(e.target.value)}
-              />
+              <Input label={"Ime i prezime"} value={name} onChange={(e) => setName(e.target.value)}/>
             </div>
           )}
 
           <div>
-            <label>Email adresa</label>
-            <input type="email" required 
-            value={email} onChange={(e) => setEmail(e.target.value)}/>
+              <Input label={"Email"} value={email} onChange={(e) => setEmail(e.target.value)}/>
           </div>
 
           <div>
@@ -122,9 +119,8 @@ export default function AuthForm({ mode }: { mode: Mode }) {
 
           {err && <p className="error-text">{err}</p>}
 
-          <button type="submit" disabled={loading}>
-            {loading ? "Obrada..." : btnLabel}
-          </button>
+          <Button text={loading ? "Obrada..." : btnLabel}/>
+            
         </form>
 
         <div className="auth-switch">

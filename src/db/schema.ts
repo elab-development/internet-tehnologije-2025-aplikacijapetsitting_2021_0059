@@ -30,6 +30,7 @@ export const oglas = pgTable("oglas", {
   idLjubimac: uuid("idLjubimac").notNull().references(() => ljubimac.id),
   idTipUsluge: uuid("idTipUsluge").notNull().references(() => tipUsluge.id),
 });
+
 //tip usluge
 export const tipUsluge = pgTable("tipUsluge", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -56,8 +57,6 @@ export const prijava = pgTable("prijava", {
   id: uuid("id").primaryKey().defaultRandom(),
   status : varchar("status", { length: 255 }).notNull().default("U obradi"),
   ocena : doublePrecision("ocena").default(0),
- 
-
   idKorisnik: uuid("idKorisnik").notNull().references(() => korisnik.id),
   idOglas: uuid("idOglas").notNull().references(() => oglas.id),
 });

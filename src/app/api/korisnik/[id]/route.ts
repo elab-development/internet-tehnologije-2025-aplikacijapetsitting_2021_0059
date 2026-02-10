@@ -7,14 +7,11 @@ import { NextRequest, NextResponse } from "next/server";
 
 
 //GET korisnik po ID‑ju
-export async function GET(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(req: NextRequest,{ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
   const user = await db.query.korisnik.findFirst({
-    where: eq(korisnik.id, id),
+     where: eq(korisnik.id, id),
   });
 
   if (!user) {
@@ -33,6 +30,7 @@ export async function DELETE( req: NextRequest, { params }: { params: Promise<{ 
   return Response.json({ message: "User deleted" });
 }
 
+//Update korisnika pomocu PUT 
 export async function PUT(req: Request) {
   try {
     const token = (await cookies()).get(AUTH_COOKIE)?.value;
@@ -45,12 +43,12 @@ export async function PUT(req: Request) {
 
     const body = await req.json();
     const {
-      ime,
-      prezime,
-      brojTelefona,
-      grad,
-      opstina,
-      datumRodjenja,
+        ime,
+        prezime,
+        brojTelefona,
+        datumRodjenja,
+        grad,
+        opstina,
     } = body;
 
     await db
@@ -59,9 +57,9 @@ export async function PUT(req: Request) {
         ime,
         prezime,
         brojTelefona,
+        datumRodjenja,
         grad,
         opstina,
-        datumRodjenja,
       })
       .where(eq(korisnik.id, claims.sub));
      

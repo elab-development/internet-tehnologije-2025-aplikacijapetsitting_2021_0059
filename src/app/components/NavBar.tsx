@@ -1,12 +1,12 @@
 "use client";
 
-import { RiUser3Line } from "@remixicon/react";
+import { RiAlignItemRightLine, RiUser2Line, RiUser3Line, RiUser4Line } from "@remixicon/react";
 import Link from "next/link";
 import { useState } from "react";
 import { useAuth } from "./AuthProvider";
 
 export default function Navbar() {
-     const { status, user, logout } = useAuth();
+    const { status, user, logout } = useAuth();
     const isLoggedIn = status === "authenticated";
 
     const [open, setOpen] = useState(false);
@@ -36,7 +36,10 @@ export default function Navbar() {
             alt="Šapa"
             className="mx-auto h-10 w-auto"
             />
+            
+        
         </Link>
+
 
     {isLoggedIn ? (
         <div style={{ position: "relative" }}>
@@ -51,7 +54,7 @@ export default function Navbar() {
                 cursor: "pointer",
             }}
             >
-            <RiUser3Line />
+                <RiUser3Line />
             </button>
 
         {open && (
@@ -70,20 +73,16 @@ export default function Navbar() {
         >
             <Link href={`/profile/${user.id}`} 
           style={{ marginBottom: "8px", fontWeight: 500,textAlign: "center", }}>
-           <p>{user.ime}</p>
+           <p><b>{user.ime}</b></p>
         </Link>
-
-          {/*   <div style={{ marginBottom: "8px", fontWeight: 500,textAlign: "center", }}>
-            {user?.ime}
-            </div> */}
-
             <button
             onClick={handleLogout}
             style={{
                 width: "100%",
                 padding: "10px",
-                background: "#fee2e2",
-                color: "#b91c1c",
+                marginTop: "10px",
+                background: "indigo",
+                color: "#ffffff",
                 border: "none",
                 borderRadius: "6px",
                 cursor: "pointer",

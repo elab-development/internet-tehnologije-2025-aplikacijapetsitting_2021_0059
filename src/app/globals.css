@@ -8,20 +8,34 @@
 
 body {
   font-family: Arial, Helvetica, sans-serif;
-  background-color: #f5f7fa;
   color: #333;
+  background-image:url("/sapice.jpg");
+  background-repeat: no-repeat;               
+  background-size: cover;                   
+  background-attachment: fixed;
+}
+#reg{
+  background-image:url("/sapice.jpg");
+background-repeat: no-repeat;             
+  background-size: cover;                    
+  background-attachment: fixed;
 }
 
 main {
   max-width: 900px;
-   margin: 40px auto;
-  background-color: #ffffff;
+  margin: 40px auto;
   border-radius: 8px;
+  background-color: rgb(248, 248, 248);
+
 }
 
 h1 {
   font-size: xx-large   ;
   margin-bottom: 20px;
+}
+
+h2{
+  font-size: x-large;
 }
 
 button {
@@ -58,7 +72,6 @@ h4:hover {
 }
 
 .auth-page {
-  
   display: flex;
   align-items: center;
   justify-content: center;

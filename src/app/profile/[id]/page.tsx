@@ -1,5 +1,6 @@
 "use client";
 
+import Button from "@/app/components/Button";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -54,7 +55,7 @@ export default function ProfilePage({ params }: Props) {
       <p><strong>Broj telefona:</strong> {user.brojTelefona}</p>
 
     <Link href="/profil/izmena">
-  <button>Izmeni profil</button>
+ <Button text="Izmeni profil"/>
 </Link>
     </main>
     

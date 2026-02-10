@@ -58,7 +58,6 @@ export async function POST(req: Request) {
      name: u.ime,
      email: u.email,
  });
-
  res.cookies.set(AUTH_COOKIE, token, cookieOpts());
 
 // 7. Return JSON user data – frontend dobija osnovne podatke o korisniku

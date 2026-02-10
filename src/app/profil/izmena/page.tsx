@@ -1,4 +1,7 @@
 "use client";
+import Button from "@/app/components/Button";
+import Input from "@/app/components/Input";
+import { korisnik } from "@/db/schema";
 import { useState } from "react";
 
 export default function EditProfilPage() {
@@ -9,19 +12,22 @@ export default function EditProfilPage() {
   const [opstina, setOpstina] = useState("");
   const [datumRodjenja, setDatumRodjenja] = useState("");
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  const id = korisnik.id;
 
-    const res = await fetch("/api/profil", {
+  async function handleSubmit(e: React.SyntheticEvent) {
+    e.preventDefault();
+    
+
+    const res = await fetch(`/api/korisnik/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         ime,
         prezime,
         brojTelefona,
+        datumRodjenja,
         grad,
         opstina,
-        datumRodjenja,
       }),
     });
 
@@ -36,9 +42,11 @@ export default function EditProfilPage() {
     <main style={{ padding: 20, maxWidth: 400 }}>
       <h1>Izmena profila</h1>
 
-      <form onSubmit={handleSubmit}>
-        <input placeholder="Ime" value={ime} onChange={e => setIme(e.target.value)} />
-        <input placeholder="Prezime" value={prezime} onChange={e => setPrezime(e.target.value)} />
+      <form onSubmit={handleSubmit} style={{ maxWidth: 400}}>
+        <Input label={"Ime"} value={ime} onChange={e => setIme(e.target.value)}/>
+        <Input label={"Prezime"} value={prezime} onChange={e => setPrezime(e.target.value)}/>
+
+        
         <input placeholder="Broj telefona" value={brojTelefona} onChange={e => setBrojTelefona(e.target.value)} />
         <input placeholder="Grad" value={grad} onChange={e => setGrad(e.target.value)} />
         <input placeholder="Opština" value={opstina} onChange={e => setOpstina(e.target.value)} />
@@ -48,8 +56,7 @@ export default function EditProfilPage() {
           value={datumRodjenja}
           onChange={e => setDatumRodjenja(e.target.value)}
         />
-
-        <button type="submit">Sačuvaj izmene</button>
+        <Button text="Sačuvaj izmene"/>
       </form>
     </main>
   );
