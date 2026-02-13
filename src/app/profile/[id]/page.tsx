@@ -55,8 +55,8 @@ export default function ProfilePage({ params }: Props) {
       <p><strong>Broj telefona:</strong> {user.brojTelefona}</p>
 
     <Link href="/profil/izmena">
- <Button text="Izmeni profil"/>
-</Link>
+      <Button text="Izmeni profil"/>
+    </Link>
     </main>
     
   );

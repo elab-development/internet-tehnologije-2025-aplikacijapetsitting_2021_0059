@@ -14,18 +14,12 @@ body {
   background-size: cover;                   
   background-attachment: fixed;
 }
-#reg{
-  background-image:url("/sapice.jpg");
-background-repeat: no-repeat;             
-  background-size: cover;                    
-  background-attachment: fixed;
-}
+
 
 main {
   max-width: 900px;
   margin: 40px auto;
   border-radius: 8px;
-  background-color: rgb(248, 248, 248);
 
 }
 
@@ -75,7 +69,11 @@ h4:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f5f6fa;
+   background-image:url("/sapice.jpg");
+background-repeat: no-repeat;             
+  background-size: cover;                    
+  background-attachment: fixed;
+  
 }
 
 .auth-box {

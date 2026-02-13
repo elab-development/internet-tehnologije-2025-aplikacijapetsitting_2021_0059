@@ -44,6 +44,7 @@ export async function POST(req: Request) {
     if (!token) {
       return NextResponse.json({ message: "Niste ulogovani" }, { status: 401 });
     }
+   
 
     const claims = verifyAuthToken(token);
 
@@ -53,6 +54,10 @@ export async function POST(req: Request) {
 
     if (!user) {
       return NextResponse.json({ message: "Korisnik ne postoji" }, { status: 401 });
+    }
+    
+    if (user?.uloga !== "Vlasnik") {
+      return NextResponse.json({ error: "Nemate dozvolu" }, { status: 403 });
     }
 
     const {

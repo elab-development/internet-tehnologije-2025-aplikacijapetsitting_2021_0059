@@ -40,14 +40,18 @@ type AdCardProps = {
 export default function AdCard({ korisnik, opis, ljubimac, tipUsluge, terminCuvanja, naknada }: AdCardProps) {
   return (
     
-    <div className="card">
-        
-          <Link href={`/profile/${korisnik.id}`} 
-          style={{ textDecoration: "none", color: "inherit", marginBottom:"5px" }}>
+    <div className="card"  style={{
+              backgroundColor:"#fafafa" ,
+              border: "1px solid #ccc",
+              padding: "12px",
+              marginBottom: "10px",
+              marginTop: "10px"}}>
+        <Link href={`/profile/${korisnik.id}`} 
+          style={{ textDecoration: "none", color: "inherit"}}>
            <h4>{korisnik.ime}</h4>
         </Link>
 
-        <h3>{opis}</h3>
+        <h3>Opis: {opis}</h3>
         <p>Ljubimac: {ljubimac.ime } ,  {ljubimac.tip}</p>
         <p>Termin čuvanja: {terminCuvanja}</p>
         <p>Tip usluge: {tipUsluge.ime}</p>

@@ -7,6 +7,7 @@ export type User = {
     id: string; 
     ime: string;
     email: string;
+    uloga: string;
 };
 
 type AuthState =
@@ -51,8 +52,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }, [refresh]);
 
 
-    const value = useMemo<Ctx>(() => ({ ...state,refresh, logout }), [state, refresh, logout]);
-
+const value = useMemo<Ctx>(
+  () => ({ ...state, refresh, logout }),
+  [state, refresh, logout]
+);
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 

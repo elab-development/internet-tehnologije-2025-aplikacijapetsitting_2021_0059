@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Button from "./Button";
 import Input from "./Input";
+import { useAuth } from "./AuthProvider";
 
 
 type Mode = "login" | "register";
@@ -12,11 +13,11 @@ type Mode = "login" | "register";
 export default function AuthForm({ mode }: { mode: Mode }) {
 
     const router = useRouter();
-
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [pwd, setPwd] = useState("");
     const [role, setRole] = useState("");
+    const { refresh } = useAuth();
 
     const [err, setErr] = useState("");
      const [loading, setLoading] = useState(false);
@@ -32,14 +33,10 @@ export default function AuthForm({ mode }: { mode: Mode }) {
          e.preventDefault();
          setErr("");
          setLoading(true);
-
-        
-
          try {
-             const endpoint = mode === "login" ? "/api/auth/login" : "/api/auth/register"
-
-            const body = mode === "login" ? { email, password: pwd } : {ime: name, email, password: pwd, uloga: role,
-      };
+            const endpoint = mode === "login" ? "/api/auth/login" : "/api/auth/register"
+            const body = mode === "login" ? { email, password: pwd } : {ime: name, email, lozinka: pwd, uloga: role,
+           };
 
              const res = await fetch(endpoint, {
                  method: "POST",
@@ -60,16 +57,17 @@ export default function AuthForm({ mode }: { mode: Mode }) {
                  setErr(message);
                  return;
              }
-
-             router.refresh();
+             await refresh();
              router.push("/");
+            
+           
          } finally {
              setLoading(false); 
          }
          }
 
      return (
-  <div className="auth-page" id="reg">
+  <div className="auth-page" >
     <div className="auth-container">
       <div className="auth-header">
         <img src="/logo.png" alt="Šapa logo" width="120px" height="120px"/>
@@ -103,14 +101,13 @@ export default function AuthForm({ mode }: { mode: Mode }) {
               <label>Izaberi ulogu</label>
               <div className="role-group">
                 <label>
-                  <input type="radio" name="uloga" value="Vlasnik"  checked={role === "Vlasnik"} onChange={(e) => setRole(e.target.value)} required />
+                  <input type="radio" name="role" value="Vlasnik"  checked={role == "Vlasnik"} onChange={(e) => setRole(e.target.value)} />
                   Vlasnik ljubimca
                 </label>
 
 
                 <label>
-                    
-                  <input type="radio" name="uloga" value="Sitter" checked={role === "Sitter"} onChange={(e) => setRole(e.target.value)}/>
+                  <input type="radio" name="role" value="Sitter" checked={role == "Sitter"} onChange={(e) => setRole(e.target.value)}/>
                   Pet sitter
                 </label>
               </div>
@@ -119,8 +116,9 @@ export default function AuthForm({ mode }: { mode: Mode }) {
 
           {err && <p className="error-text">{err}</p>}
 
-          <Button text={loading ? "Obrada..." : btnLabel}/>
+          <Button type="submit" text={loading ? "Obrada..." : btnLabel}/>
             
+             
         </form>
 
         <div className="auth-switch">

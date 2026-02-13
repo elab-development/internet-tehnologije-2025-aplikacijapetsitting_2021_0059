@@ -7,7 +7,7 @@ type ButtonProps = {
 export default function Button({
   text,
   onClick,
-  type = "button",
+  type = "submit",
 }: ButtonProps) {
   return (
     <button type={type} onClick={onClick} className="btn" style={{marginTop: "10px", backgroundColor: "indigo"}}>

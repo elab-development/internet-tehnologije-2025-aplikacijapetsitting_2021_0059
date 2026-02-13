@@ -85,7 +85,7 @@ export default function NoviOglasPage() {
       ))}
       </select>
 
-        <Button text="Dodaj oglas"/>
+        <Button text="Dodaj oglas" type="submit"/>
       </form>
       </main>
        );

@@ -45,12 +45,11 @@ export default function EditProfilPage() {
       <form onSubmit={handleSubmit} style={{ maxWidth: 400}}>
         <Input label={"Ime"} value={ime} onChange={e => setIme(e.target.value)}/>
         <Input label={"Prezime"} value={prezime} onChange={e => setPrezime(e.target.value)}/>
+        <Input label={"Broj telefona"} value={brojTelefona} onChange={e => setBrojTelefona(e.target.value)}/>
+         <Input label={"Grad"} value={grad} onChange={e => setGrad(e.target.value)}/>
+          <Input label={"Opstinaa"} value={opstina} onChange={e => setOpstina(e.target.value)}/>
 
-        
-        <input placeholder="Broj telefona" value={brojTelefona} onChange={e => setBrojTelefona(e.target.value)} />
-        <input placeholder="Grad" value={grad} onChange={e => setGrad(e.target.value)} />
-        <input placeholder="Opština" value={opstina} onChange={e => setOpstina(e.target.value)} />
-
+        <label >Datum rođenja</label>
         <input
           type="date"
           value={datumRodjenja}

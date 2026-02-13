@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import AdCard, { Korisnik, Ljubimac, TipUsluge } from "./components/AdCard";
 import Button from "./components/Button";
 import Link from "next/link";
+import { useAuth } from "./components/AuthProvider";
 
 
 type Ad = {
@@ -21,6 +22,8 @@ export default function Home() {
 
   const [ads, setAds] = useState<Ad[]>([]);
   const [error, setError] = useState("");
+  const { user, } = useAuth();
+
 
   useEffect(() => {
     const fetchAds = async () => {
@@ -47,19 +50,19 @@ export default function Home() {
   
    return (
     <main style={{ padding: "20px" }}>
-      <div className="flex justify-end mb-4">
-         <Link href="/oglas">
-            <Button text="Dodaj oglas"/>
-        </Link>
-      </div>
-
-
-
-      <div style={{ marginTop: "20px" }}>
+      
+        {user?.uloga === "Vlasnik" && (
+          <Link href="/oglas">
+            <Button text={"Dodaj oglas"}/>
+          </Link>
+            )}
+      
+     
         {ads.map((ad) => (
           <div
             key={ad.id}
             style={{
+              backgroundColor:"#fafafa" ,
               border: "1px solid #ccc",
               padding: "12px",
               marginBottom: "10px",
@@ -67,11 +70,15 @@ export default function Home() {
             }}
           >
             
-             <AdCard key={ad.id} korisnik={ad.korisnik} opis={ad.opis} ljubimac={ad.ljubimac} tipUsluge={ad.tipUsluge} terminCuvanja={ad.terminCuvanja} naknada={ad.naknada}/>
-             <Button text="Prijavi se" type="submit" />
+             <AdCard  key={ad.id} korisnik={ad.korisnik} opis={ad.opis} ljubimac={ad.ljubimac} tipUsluge={ad.tipUsluge} terminCuvanja={ad.terminCuvanja} naknada={ad.naknada}/>
+             {user?.uloga === "Sitter" && (
+              <Link href="">
+                <Button text={"Prijavi se"}/>
+              </Link>
+              )}
           </div>
         ))}
-      </div>
+     
     </main>
   );
 }
