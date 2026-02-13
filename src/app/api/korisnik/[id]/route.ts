@@ -38,7 +38,7 @@ export async function PUT(req: Request) {
     if (!token) {
       return NextResponse.json({ message: "Niste ulogovani" }, { status: 401 });
     }
-
+    
     const claims = verifyAuthToken(token);
 
     const body = await req.json();

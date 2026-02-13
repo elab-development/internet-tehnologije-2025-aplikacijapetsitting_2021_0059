@@ -1,5 +1,6 @@
 "use client";
 
+import { useAuth } from "@/app/components/AuthProvider";
 import Button from "@/app/components/Button";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -22,6 +23,7 @@ type Props = {
 export default function ProfilePage({ params }: Props) {
   const [user, setUser] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
+  const { user: loggedUser } = useAuth();
 
   useEffect(() => {
     async function fetchUser() {
@@ -46,6 +48,7 @@ export default function ProfilePage({ params }: Props) {
 
   return (
     <main style={{ padding: "20px" }}>
+      <div style={{ padding: 20, backgroundColor: "#fafafa", border: "1px solid #ccc", borderRadius:"8px"}}>
       <h1>Profil korisnika</h1>
 
       <p><strong>Ime:</strong> {user.ime} {user.prezime}</p>
@@ -54,9 +57,12 @@ export default function ProfilePage({ params }: Props) {
       <p><strong>Grad:</strong> {user.grad} {"(" + user.opstina + ")"}</p>
       <p><strong>Broj telefona:</strong> {user.brojTelefona}</p>
 
-    <Link href="/profil/izmena">
-      <Button text="Izmeni profil"/>
-    </Link>
+    {loggedUser && loggedUser.id === user.id && (
+      <Link href="/profil/izmena">
+        <Button text="Izmeni profil" />
+      </Link>
+    )}
+    </div>
     </main>
     
   );
