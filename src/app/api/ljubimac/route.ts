@@ -6,6 +6,8 @@ export async function GET() {
   const allPets = await db.select().from(ljubimac);
   return Response.json(allPets);
 }
+
+
 //POST novi ljubimac
 export async function POST(req: Request) {
   const body = await req.json();

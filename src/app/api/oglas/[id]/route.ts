@@ -1,26 +1,34 @@
 import { db } from "@/db";
-import { oglas } from "@/db/schema";
+import { korisnik, ljubimac, oglas, tipUsluge } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 
 //GET jedan oglas
+export async function GET(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
+  const data = await db
+    .select()
+    .from(oglas)
+    .leftJoin(korisnik, eq(oglas.idKorisnik, korisnik.id))
+    .leftJoin(ljubimac, eq(oglas.idLjubimac, ljubimac.id))
+    .leftJoin(tipUsluge, eq(oglas.idTipUsluge, tipUsluge.id))
+    .where(eq(oglas.id, params.id));
 
-
-
-export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
-
-  const ad = await db.query.oglas.findFirst({
-    where: eq(oglas.id, id),
-  });
-
-  if (!ad) {
-    return Response.json({ error: "Ad not found" }, { status: 404 });
+  if (!data.length) {
+    return NextResponse.json({ message: "Oglas ne postoji" }, { status: 404 });
   }
 
-  return Response.json(ad);
+  return NextResponse.json({
+    ...data[0].oglas,
+    korisnik: data[0].korisnik,
+    ljubimac: data[0].ljubimac,
+    tipUsluge: data[0].tipUsluge,
+  });
 }
+
 
 //PUT jedan oglas
 export async function PUT(req: Request, { params }: any) {

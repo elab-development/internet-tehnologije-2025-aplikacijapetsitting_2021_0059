@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { korisnik, oglas } from "@/db/schema";
+import { korisnik, ljubimac, oglas, tipUsluge } from "@/db/schema";
 import { AUTH_COOKIE, verifyAuthToken } from "@/lib/auth";
 import { eq } from "drizzle-orm";
 import { cookies } from "next/headers";
@@ -8,32 +8,21 @@ import { NextResponse } from "next/server";
 
 //GET svi oglasi
 export async function GET() {
- const allAds = await db.query.oglas.findMany({
-    with: {
-      korisnik: {
-        columns: {
-          id: true,
-          ime: true,
-          prezime: true,
-        },
-      },
-      ljubimac: {
-        columns: {
-          id: true,
-          ime: true,
-          tip: true,
-        },
-      },
-       tipUsluge: {
-        columns: {
-          id: true,
-          ime: true
-        },
-     
-    },
-  }});
+  const data = await db
+    .select()
+    .from(oglas)
+    .leftJoin(korisnik, eq(oglas.idKorisnik, korisnik.id))
+    .leftJoin(ljubimac, eq(oglas.idLjubimac, ljubimac.id))
+    .leftJoin(tipUsluge, eq(oglas.idTipUsluge, tipUsluge.id));
 
-  return NextResponse.json(allAds);
+  return NextResponse.json(
+    data.map((row) => ({
+      ...row.oglas,
+      korisnik: row.korisnik,
+      ljubimac: row.ljubimac,
+      tipUsluge: row.tipUsluge,
+    }))
+  );
 }
 
 
