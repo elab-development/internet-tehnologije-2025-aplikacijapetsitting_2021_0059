@@ -2,6 +2,7 @@ import { db } from "@/db";
 import { korisnik, ljubimac, oglas, tipUsluge } from "@/db/schema";
 import { AUTH_COOKIE, verifyAuthToken } from "@/lib/auth";
 import { eq } from "drizzle-orm";
+import { date } from "drizzle-orm/pg-core";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 

@@ -56,6 +56,7 @@ export default function EditProfilPage() {
 
     if (res.ok) {
       alert("Profil uspešno ažuriran");
+      window.location.href = `/profile/${user?.id}`;
     } else {
       alert("Greška pri izmeni profila");
     }
@@ -79,9 +80,9 @@ export default function EditProfilPage() {
           value={datumRodjenja}
           onChange={e => setDatumRodjenja(e.target.value)}
         />
-        <Link href={`/profile/${user?.id}`}>
+        
           <Button text="Sačuvaj izmene"/>
-        </Link>
+        
       </form>
       </div>
     </main>

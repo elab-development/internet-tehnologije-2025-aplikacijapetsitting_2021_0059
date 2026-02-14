@@ -5,6 +5,7 @@ import Button from "../components/Button";
 import Input from "../components/Input";
 import { view } from "drizzle-orm/sqlite-core";
 
+
 export default function NoviOglasPage() {
   const [ljubimci, setLjubimci] = useState<any[]>([]);
   const [tipovi, setTipovi] = useState<any[]>([]);
@@ -33,7 +34,6 @@ export default function NoviOglasPage() {
   async function handleSubmit(e: React.SyntheticEvent) {
     e.preventDefault();
     console.log("FORMA KOJA SE ŠALJE:", form);
-
     const res = await fetch("/api/oglas", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -42,6 +42,7 @@ export default function NoviOglasPage() {
 
     if (res.ok) {
       alert("Oglas dodat");
+      window.location.href = "/";
     } else {
       alert("Greška");
     }
@@ -49,11 +50,25 @@ export default function NoviOglasPage() {
 
   return (
     <main style={{ padding: 20, maxWidth: 400 }}>
+    <div style={{
+              backgroundColor:"#fafafa" ,
+              border: "1px solid #ccc",
+              borderRadius:12,
+              padding: "12px",
+              marginBottom: "10px",
+              marginTop: "10px"
+            }}>
     <form onSubmit={handleSubmit} >
       <h2>Dodavanje oglasa</h2>
       <Input label={"Opis"} value={form.opis} onChange={(e) => setForm({ ...form, opis: e.target.value })}/>
-      <Input label={"Datum"} value={form.terminCuvanja} onChange={(e) => setForm({ ...form, terminCuvanja: e.target.value })}/>
-      
+<label htmlFor="">Datum</label>
+<input
+  type="date"
+  value={form.terminCuvanja}
+  onChange={(e) =>
+    setForm({ ...form, terminCuvanja: e.target.value })
+  }
+/>      
       <label>Novčana naknada</label>
       <input
         type="number"
@@ -84,9 +99,9 @@ export default function NoviOglasPage() {
         </option>
       ))}
       </select>
-
         <Button text="Dodaj oglas" type="submit"/>
       </form>
+      </div>
       </main>
        );
        

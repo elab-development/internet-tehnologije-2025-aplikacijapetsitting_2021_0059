@@ -53,6 +53,7 @@ export default function ProfilePage({ params }: Props) {
 
     fetchUser();
   }, [params]);
+  
 async function handleDeletePet(id: string) {
   await fetch(`/api/ljubimac/${id}`, { method: "DELETE" });
   setLjubimci(prev => prev.filter(p => p.id !== id));
