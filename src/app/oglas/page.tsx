@@ -4,17 +4,22 @@ import { useEffect, useState } from "react";
 import Button from "../components/Button";
 import Input from "../components/Input";
 import { view } from "drizzle-orm/sqlite-core";
+import { useAuth } from "../components/AuthProvider";
+
 
 
 export default function NoviOglasPage() {
   const [ljubimci, setLjubimci] = useState<any[]>([]);
   const [tipovi, setTipovi] = useState<any[]>([]);
+  const { user } = useAuth();
 
   useEffect(() => {
-      fetch("/api/ljubimac")
-        .then((res) => res.json())
-        .then((data) => setLjubimci(data));
-    }, []);
+  if (!user?.id) return;
+
+  fetch(`/api/ljubimac/korisnik/${user.id}`)
+    .then((res) => res.json())
+    .then((data) => setLjubimci(data));
+}, [user]);
 
   useEffect(() => {
     fetch("/api/tipUsluge")
@@ -26,7 +31,7 @@ export default function NoviOglasPage() {
   const [form, setForm] = useState({
     opis: "",
     terminCuvanja: "",
-    naknada: 0,
+    naknada: "",
     idLjubimac: "",
     idTipUsluge: "",
   });
@@ -74,7 +79,7 @@ export default function NoviOglasPage() {
         type="number"
         placeholder="Naknada"
         value={form.naknada}
-        onChange={(e) => setForm({ ...form, naknada: Number(e.target.value)  })}
+        onChange={(e) => setForm({ ...form, naknada: e.target.value })}
       />
 
       <select

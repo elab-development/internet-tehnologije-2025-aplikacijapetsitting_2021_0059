@@ -15,6 +15,5 @@ const data = await db
   .select()
   .from(ljubimac)
   .where(eq(ljubimac.idKorisnik, id));
-
   return NextResponse.json(data);
 }

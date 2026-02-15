@@ -55,11 +55,23 @@ export default function ProfilePage({ params }: Props) {
   }, [params]);
   
 async function handleDeletePet(id: string) {
+  const potvrda = window.confirm(
+    "Da li ste sigurni da želite da obrišete ljubimca?"
+  );
+
+  if (!potvrda) return; 
+
   await fetch(`/api/ljubimac/${id}`, { method: "DELETE" });
   setLjubimci(prev => prev.filter(p => p.id !== id));
+  
 }
 
 async function handleDeleteAd(id: string) {
+  const potvrda = window.confirm(
+    "Da li ste sigurni da želite da obrišete oglas?"
+  );
+
+  if (!potvrda) return; 
   await fetch(`/api/oglas/${id}`, { method: "DELETE" });
   setOglasi(prev => prev.filter(o => o.id !== id));
 }

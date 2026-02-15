@@ -1,5 +1,9 @@
 import { db } from "@/db";
-import { ljubimac } from "@/db/schema";
+import { korisnik, ljubimac } from "@/db/schema";
+import { AUTH_COOKIE, verifyAuthToken } from "@/lib/auth";
+import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
+import { eq } from "drizzle-orm";
 
 //GET svi ljubimci
 export async function GET() {
@@ -10,7 +14,65 @@ export async function GET() {
 
 //POST novi ljubimac
 export async function POST(req: Request) {
-  const body = await req.json();
-  const pet = await db.insert(ljubimac).values(body).returning();
-  return Response.json(pet[0], { status: 201 });
+  try {
+    const token = (await cookies()).get(AUTH_COOKIE)?.value;
+
+    if (!token) {
+      return NextResponse.json(
+        { message: "Niste ulogovani" },
+        { status: 401 }
+      );
+    }
+
+    const claims = verifyAuthToken(token);
+    const user = await db.query.korisnik.findFirst({
+          where: eq(korisnik.id, claims.sub),
+        });
+         if (!user) {
+      return NextResponse.json({ message: "Korisnik ne postoji" }, { status: 401 });
+    }
+    
+    if (user?.uloga !== "Vlasnik") {
+      return NextResponse.json({ error: "Nemate dozvolu" }, { status: 403 });
+    }
+
+    const body = await req.json();
+
+    const {
+      tip,
+      ime,
+      datumRodjenja,
+      alergije,
+      lekovi,
+      ishrana,
+    } = body;
+
+    if (!tip || !ime || !datumRodjenja) {
+      return NextResponse.json(
+        { message: "Vrsta, ime i datum rodjenja su obavezni!" },
+        { status: 400 }
+      );
+    }
+
+    await db.insert(ljubimac).values({
+      tip,
+      ime,
+      datumRodjenja,
+      alergije: alergije || undefined,
+      lekovi: lekovi || undefined,
+      ishrana: ishrana || undefined,
+      idKorisnik: user.id, 
+    });
+
+    return NextResponse.json({
+      message: "Ljubimac uspešno dodat",
+    });
+
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      { message: "Greška na serveru" },
+      { status: 500 }
+    );
+  }
 }

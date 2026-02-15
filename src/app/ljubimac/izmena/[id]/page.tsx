@@ -29,15 +29,16 @@ export default function EditLjubimacPage({ params }: Props) {
         const data = await res.json();
 
         if (data.length > 0) {
-  const pet = data[0];}
-    if (data) {
-        setTip(data.tip || "");
-        setIme(data.ime || "");
-        setDatumRodjenja(data.datumRodjenja?.slice(0, 10) || "");
-        setAlergije(data.alergije || "");
-        setLekovi(data.lekovi || "");
-        setIshrana(data.ishrana || "");
-      }
+          const pet = data[0];
+        }
+        if (data) {
+          setTip(data.tip || "");
+          setIme(data.ime || "");
+          setDatumRodjenja(data.datumRodjenja?.slice(0, 10) || "");
+          setAlergije(data.alergije || "");
+          setLekovi(data.lekovi || "");
+          setIshrana(data.ishrana || "");
+        }
     }
 
     fetchPet();
@@ -78,9 +79,20 @@ export default function EditLjubimacPage({ params }: Props) {
     <main style={{ maxWidth: 400 }}>
       <div style={{ padding: 20, backgroundColor: "#fafafa",maxWidth: 400, border: "1px solid #ccc",borderRadius:"8px" }}>
       <h1>Izmena ljubimca</h1>
-
       <form onSubmit={handleSubmit}>
-        <Input label={"Vrsta"} value={tip} onChange={e => setTip(e.target.value)}/>
+        <select
+        style={{marginBottom:15}}
+          value={tip}
+          onChange={(e) =>setTip(e.target.value)          }
+        >
+          <option value="">Izaberi vrstu</option>
+          <option value="Pas">Pas</option>
+          <option value="Mačka">Mačka</option>
+          <option value="Ptica">Ptica</option>
+          <option value="Hrčak">Hrčak</option>
+          <option value="Zec">Zec</option>
+           <option value="Ostalo">Ostalo</option>
+        </select>
         <Input label={"Ime"} value={ime} onChange={e => setIme(e.target.value)}/>
          <label >Datum rođenja</label>
         <input
