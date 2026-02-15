@@ -1,0 +1,1 @@
+ALTER TABLE "oglas" ADD COLUMN "createdAt" timestamp DEFAULT now();

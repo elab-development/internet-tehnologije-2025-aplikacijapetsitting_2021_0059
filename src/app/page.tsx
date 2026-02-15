@@ -22,13 +22,14 @@ export default function Home() {
 
   const [ads, setAds] = useState<Ad[]>([]);
   const [error, setError] = useState("");
+  const [sort, setSort] = useState("");
   const { user, } = useAuth();
 
 
   useEffect(() => {
     const fetchAds = async () => {
       try {
-        const res = await fetch("/api/oglas");
+        const res = await fetch(`/api/oglas?sort=${sort}`);
 
         if (!res.ok) {
           throw new Error("Greška pri učitavanju oglasa");
@@ -42,7 +43,7 @@ export default function Home() {
     };
 
     fetchAds();
-  }, []);
+  }, [sort]);
 
   if (error) return <p>{error}</p>;
   if (ads.length === 0) return <p>Učitavanje...</p>;
@@ -50,12 +51,24 @@ export default function Home() {
   
    return (
     <main style={{ padding: "20px" }}>
-      
         {user?.uloga === "Vlasnik" && (
           <Link href="/oglas">
             <Button text={"Dodaj oglas"}/>
           </Link>
-            )}
+          )}
+          
+        <select
+          value={sort}
+          onChange={(e) => setSort(e.target.value)}
+          style={{marginTop:10}}
+          >
+          <option value="novo">Najnoviji</option>
+          <option value="staro">Najstariji</option>
+          <option value="cena_desc">Najveća naknada</option>
+          <option value="cena_asc">Najmanja naknada</option>
+          <option value="datum_asc">Najmanji datum</option>
+          <option value="datum_desc">Najveći datum</option>
+        </select>
       
      
         {ads.map((ad) => (

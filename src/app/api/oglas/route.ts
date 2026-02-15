@@ -1,20 +1,34 @@
 import { db } from "@/db";
 import { korisnik, ljubimac, oglas, tipUsluge } from "@/db/schema";
 import { AUTH_COOKIE, verifyAuthToken } from "@/lib/auth";
-import { eq } from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 import { date } from "drizzle-orm/pg-core";
 import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { desc } from "drizzle-orm";
+
 
 
 //GET svi oglasi
-export async function GET() {
-  const data = await db
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const sort = searchParams.get("sort");
+
+    const query = db
     .select()
     .from(oglas)
     .leftJoin(korisnik, eq(oglas.idKorisnik, korisnik.id))
     .leftJoin(ljubimac, eq(oglas.idLjubimac, ljubimac.id))
     .leftJoin(tipUsluge, eq(oglas.idTipUsluge, tipUsluge.id));
+
+  const data =
+    sort === "staro" ? await query.orderBy(asc(oglas.createdAt)) : 
+    sort === "cena_desc" ? await query.orderBy(desc(oglas.naknada)) : 
+    sort === "cena_asc" ? await query.orderBy(asc(oglas.naknada)) : 
+    sort === "datum_asc" ? await query.orderBy(asc(oglas.terminCuvanja)) : 
+    sort === "datum_desc" ? await query.orderBy(desc(oglas.terminCuvanja)) : 
+    await query.orderBy(desc(oglas.createdAt)); // default
+
 
   return NextResponse.json(
     data.map((row) => ({

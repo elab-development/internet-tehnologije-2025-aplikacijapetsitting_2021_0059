@@ -29,6 +29,8 @@ export const oglas = pgTable("oglas", {
   idKorisnik: uuid("idKorisnik").notNull().references(() => korisnik.id),
   idLjubimac: uuid("idLjubimac").notNull().references(() => ljubimac.id),
   idTipUsluge: uuid("idTipUsluge").notNull().references(() => tipUsluge.id),
+  
+  createdAt: timestamp("createdAt").defaultNow(),
 });
 
 //tip usluge
