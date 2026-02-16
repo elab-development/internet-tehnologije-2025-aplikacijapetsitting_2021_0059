@@ -66,8 +66,8 @@ export default function Home() {
           <option value="staro">Najstariji</option>
           <option value="cena_desc">Najveća naknada</option>
           <option value="cena_asc">Najmanja naknada</option>
-          <option value="datum_asc">Najmanji datum</option>
-          <option value="datum_desc">Najveći datum</option>
+          <option value="datum_asc">Najskoriji datum</option>
+          <option value="datum_desc">Najdalji datum</option>
         </select>
       
      

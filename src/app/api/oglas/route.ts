@@ -1,11 +1,12 @@
 import { db } from "@/db";
 import { korisnik, ljubimac, oglas, tipUsluge } from "@/db/schema";
 import { AUTH_COOKIE, verifyAuthToken } from "@/lib/auth";
-import { asc, eq } from "drizzle-orm";
+import { asc, eq, gte } from "drizzle-orm";
 import { date } from "drizzle-orm/pg-core";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { desc } from "drizzle-orm";
+import { useAuth } from "@/app/components/AuthProvider";
 
 
 
@@ -13,21 +14,45 @@ import { desc } from "drizzle-orm";
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const sort = searchParams.get("sort");
+  
+  let query = db
+  .select()
+  .from(oglas)
+  .leftJoin(korisnik, eq(oglas.idKorisnik, korisnik.id))
+  .leftJoin(ljubimac, eq(oglas.idLjubimac, ljubimac.id))
+  .leftJoin(tipUsluge, eq(oglas.idTipUsluge, tipUsluge.id));
 
-    const query = db
-    .select()
-    .from(oglas)
-    .leftJoin(korisnik, eq(oglas.idKorisnik, korisnik.id))
-    .leftJoin(ljubimac, eq(oglas.idLjubimac, ljubimac.id))
-    .leftJoin(tipUsluge, eq(oglas.idTipUsluge, tipUsluge.id));
 
+  const token = (await cookies()).get(AUTH_COOKIE)?.value;
+  let isAdmin = false;
+
+  if (token) {
+    const claims = verifyAuthToken(token);
+    const user = await db.query.korisnik.findFirst({
+      where: eq(korisnik.id, claims.sub),
+    });
+    if (!user) {
+      return NextResponse.json({ message: "Korisnik ne postoji" }, { status: 401 });
+    }
+    if (user?.uloga == "Admin") {
+      isAdmin = true;
+    }
+  }
+
+  
+  const danas = new Date().toDateString();
+  const filteredQuery = isAdmin
+    ? query
+    : query.where(gte(oglas.terminCuvanja, danas));
+
+  
   const data =
-    sort === "staro" ? await query.orderBy(asc(oglas.createdAt)) : 
-    sort === "cena_desc" ? await query.orderBy(desc(oglas.naknada)) : 
-    sort === "cena_asc" ? await query.orderBy(asc(oglas.naknada)) : 
-    sort === "datum_asc" ? await query.orderBy(asc(oglas.terminCuvanja)) : 
-    sort === "datum_desc" ? await query.orderBy(desc(oglas.terminCuvanja)) : 
-    await query.orderBy(desc(oglas.createdAt)); // default
+    sort === "staro" ? await filteredQuery.orderBy(asc(oglas.createdAt)) : 
+    sort === "cena_desc" ? await filteredQuery.orderBy(desc(oglas.naknada)) : 
+    sort === "cena_asc" ? await filteredQuery.orderBy(asc(oglas.naknada)) : 
+    sort === "datum_asc" ? await filteredQuery.orderBy(asc(oglas.terminCuvanja)) : 
+    sort === "datum_desc" ? await filteredQuery.orderBy(desc(oglas.terminCuvanja)) : 
+    await filteredQuery.orderBy(desc(oglas.createdAt)); // default
 
 
   return NextResponse.json(
