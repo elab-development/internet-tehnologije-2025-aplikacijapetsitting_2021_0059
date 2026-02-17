@@ -23,12 +23,15 @@ type Props = {
 
 
 export default function ProfilePage({ params }: Props) {
+  const HIDDEN_NOTIFICATIONS_STORAGE_KEY = "hiddenSitterNotifications";
   const [user, setUser] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const { user: loggedUser } = useAuth();
   const [pets, setLjubimci] = useState<any[]>([]);
   const [ads, setOglasi] = useState<any[]>([]);
   const [applications, setApplications] = useState<any[]>([]);
+  const [hiddenNotifications, setHiddenNotifications] = useState<string[]>([]);
+  const [storageReady, setStorageReady] = useState(false);
   const [filter, setFilter] = useState("Sve");
   const [pendingApplications, setPendingApplications] = useState<any[]>([]);
   const [prikaz, setPrikaz] = useState<"svi" | "odobreni" | "neodobreni">("svi");
@@ -40,6 +43,13 @@ export default function ProfilePage({ params }: Props) {
       return true;
     })
   : [];
+  function getNotificationKey(app: any) {
+    return `${app.id}:${app.status}`;
+  }
+
+  const sitterNotifications = applications
+    .filter((app) => app.status === "Odobreno" || app.status === "Odbijeno")
+    .filter((app) => !hiddenNotifications.includes(getNotificationKey(app)));
 
   function getApplicationStatusStyle(status: string) {
     if (status === "Odobreno") {
@@ -72,6 +82,17 @@ export default function ProfilePage({ params }: Props) {
       color: "#111827",
       fontWeight: isActive ? 600 : 400,
     };
+  }
+//dodaje sklonjenu u ove sto se ne prikazuju
+  function dismissNotification(app: any) {
+    const key = getNotificationKey(app);
+    if (hiddenNotifications.includes(key)) return;
+    setHiddenNotifications((prev) => [...prev, key]);
+  }
+
+  function dismissAllNotifications() {
+    const allKeys = sitterNotifications.map((app) => getNotificationKey(app));
+    setHiddenNotifications((prev) => Array.from(new Set([...prev, ...allKeys])));
   }
 
 
@@ -112,9 +133,35 @@ export default function ProfilePage({ params }: Props) {
 
     fetchUser();
   }, [params]);
-  
 
-  
+  //ucitavanje sakrivenih
+  useEffect(() => {
+    const raw = localStorage.getItem(HIDDEN_NOTIFICATIONS_STORAGE_KEY);
+    if (!raw) {
+      setStorageReady(true);
+      return;
+    }
+
+    try {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        setHiddenNotifications(parsed.filter((item) => typeof item === "string"));
+      }
+    } catch {
+      setHiddenNotifications([]);
+    }
+    setStorageReady(true);
+  }, []);
+
+//kad se promeni niz azurira se hiddenNotifications
+  useEffect(() => {
+    if (!storageReady) return;
+    localStorage.setItem(
+      HIDDEN_NOTIFICATIONS_STORAGE_KEY,
+      JSON.stringify(hiddenNotifications)
+    );
+  }, [hiddenNotifications, storageReady]);
+
 async function handleDeletePet(id: string) {
   const potvrda = window.confirm(
     "Da li ste sigurni da želite da obrišete ljubimca?"
@@ -348,6 +395,70 @@ async function handleDeletePrijava(id: string) {
         }}
       >
         <h2>Moje prijave</h2>
+        {sitterNotifications.length > 0 && (
+          <button
+            onClick={dismissAllNotifications}
+            style={{
+              backgroundColor: "#939393",
+              border: "1px solid #d1d5db",
+              borderRadius: 8,
+              padding: "4px 10px",
+              cursor: "pointer",
+              marginBottom: 10,
+            }}
+          >
+            Skloni sva obavestenja
+          </button>
+        )}
+        {sitterNotifications.length > 0 && (
+          <div
+            style={{
+              marginTop: 12,
+              marginBottom: 16,
+              padding: 14,
+              backgroundColor: "#f9fafb",
+              border: "1px solid #d1d5db",
+              borderRadius: 10,
+            }}
+          >
+            <h3 style={{ marginBottom: 10 }}>Obaveštenja ({sitterNotifications.length})</h3>
+            {sitterNotifications.map((app) => {
+              const statusStyle = getApplicationStatusStyle(app.status);
+              return (
+                <div
+                  key={`notif-${app.id}`}
+                  style={{
+                    border: `1px solid ${statusStyle.borderColor}`,
+                    backgroundColor: statusStyle.backgroundColor,
+                    color: statusStyle.color,
+                    borderRadius: 8,
+                    padding: "10px 12px",
+                    marginBottom: 8,
+                  }}
+                >
+                  <strong>{app.status}</strong>: Vaša prijava za oglas za ljubimca{" "}
+                  <strong>{app.oglas?.ljubimac?.ime ?? "bez naziva"}</strong>.
+                  <div style={{ marginTop: 6 }}>
+                  </div>
+                  <div style={{ marginTop: 8 }}>
+                    <button
+                      onClick={() => dismissNotification(app)}
+                      style={{
+                        backgroundColor: "#9d9d9d",
+                        border: "1px solid #d1d5db",
+                        borderRadius: 8,
+                        padding: "3px 10px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      Skloni
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
 
         {applications.length === 0 && <p>Niste se prijavili ni na jedan oglas.</p>}
         <div style={{ marginBottom: 15 }}>
