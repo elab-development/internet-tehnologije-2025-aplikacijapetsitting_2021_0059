@@ -61,6 +61,7 @@ export const prijava = pgTable("prijava", {
   ocena : doublePrecision("ocena").default(0),
   idKorisnik: uuid("idKorisnik").notNull().references(() => korisnik.id),
   idOglas: uuid("idOglas").notNull().references(() => oglas.id),
+  createdAt: timestamp("createdAt").defaultNow(),
 });
 
 export const oglasRelations = relations(oglas, ({ one }) => ({

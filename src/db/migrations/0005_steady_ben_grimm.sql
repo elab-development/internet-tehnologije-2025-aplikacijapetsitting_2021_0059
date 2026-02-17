@@ -1,0 +1,1 @@
+ALTER TABLE "prijava" ADD COLUMN "createdAt" timestamp DEFAULT now();

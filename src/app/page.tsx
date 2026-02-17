@@ -48,6 +48,17 @@ export default function Home() {
   if (error) return <p>{error}</p>;
   if (ads.length === 0) return <p>Učitavanje...</p>;
 
+  async function handlePrijava(id: string) {
+  const res = await fetch("/api/prijava", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ idOglas: id }),
+  });
+
+  const data = await res.json();
+  alert(data.message);
+  }
+
   
    return (
     <main style={{ padding: "20px" }}>
@@ -86,9 +97,7 @@ export default function Home() {
             
              <AdCard  key={ad.id} korisnik={ad.korisnik} opis={ad.opis} ljubimac={ad.ljubimac} tipUsluge={ad.tipUsluge} terminCuvanja={ad.terminCuvanja} naknada={ad.naknada}/>
              {user?.uloga === "Sitter" && (
-              <Link href="">
-                <Button text={"Prijavi se"}/>
-              </Link>
+                <Button onClick={() => handlePrijava(ad.id)} text={"Prijavi se"}/>
               )}
           </div>
         ))}
