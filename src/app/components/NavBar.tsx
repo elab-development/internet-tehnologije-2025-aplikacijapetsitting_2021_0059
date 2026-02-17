@@ -1,22 +1,138 @@
 "use client";
 
-import { RiAlignItemRightLine, RiUser2Line, RiUser3Line, RiUser4Line } from "@remixicon/react";
+import { RiUser3Line } from "@remixicon/react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuth } from "./AuthProvider";
 
 export default function Navbar() {
+    const HIDDEN_NOTIFICATIONS_STORAGE_KEY = "hiddenSitterNotifications";
     const { status, user, logout } = useAuth();
     const isLoggedIn = status === "authenticated";
 
     const [open, setOpen] = useState(false);
+    const profileMenuRef = useRef<HTMLDivElement | null>(null);
+    const [pendingCount, setPendingCount] = useState(0);
+    const [sitterNotificationsCount, setSitterNotificationsCount] = useState(0);
 
     const handleLogout = async () => {
         await logout();
         setOpen(false);
      };
+
+    useEffect(() => {
+      async function fetchNavbarCounts() {
+        if (!isLoggedIn || !user?.id) return;
+
+        if (user.uloga === "Vlasnik") {
+          const res = await fetch(`/api/prijava/cekanje/${user.id}`);
+          if (res.ok) {
+            const data = await res.json();
+            setPendingCount(Array.isArray(data) ? data.length : 0);
+          }
+        }
+
+        if (user.uloga === "Sitter") {
+          const res = await fetch(`/api/prijava?korisnikId=${user.id}`);
+          if (res.ok) {
+            const data = await res.json();
+            const list = Array.isArray(data) ? data : [];
+            const rawHidden = localStorage.getItem(HIDDEN_NOTIFICATIONS_STORAGE_KEY);
+            let hiddenKeys: string[] = [];
+            if (rawHidden) {
+              try {
+                const parsed = JSON.parse(rawHidden);
+                if (Array.isArray(parsed)) {
+                  hiddenKeys = parsed.filter((item) => typeof item === "string");
+                }
+              } catch {
+                hiddenKeys = [];
+              }
+            }
+            const count = list.filter(
+              (app: any) =>
+                (app.status === "Odobreno" || app.status === "Odbijeno") &&
+                !hiddenKeys.includes(`${app.id}:${app.status}`)
+            ).length;
+            setSitterNotificationsCount(count);
+          }
+        }
+      }
+
+      fetchNavbarCounts();
+      const onHiddenNotificationsUpdated = () => fetchNavbarCounts();
+      window.addEventListener("hidden-notifications-updated", onHiddenNotificationsUpdated);
+
+      return () => {
+        window.removeEventListener("hidden-notifications-updated", onHiddenNotificationsUpdated);
+      };
+    }, [isLoggedIn, user?.id, user?.uloga]);
+
+    useEffect(() => {
+      function handleClickOutside(event: MouseEvent) {
+        if (!open) return;
+        if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node)) {
+          setOpen(false);
+        }
+      }
+
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, [open]);
+
+    function Badge({ count }: { count: number }) {
+      return (
+        <span
+          style={{
+            marginLeft: 6,
+            minWidth: 20,
+            height: 20,
+            borderRadius: 10,
+            backgroundColor: "#ef4444",
+            color: "white",
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: 12,
+            padding: "0 6px",
+            fontWeight: 700,
+          }}
+        >
+          {count}
+        </span>
+      );
+    }
+
+    const navLinkStyle = {
+      textDecoration: "none",
+      color: "#111827",
+      padding: "6px 10px",
+      backgroundColor: "#ffffff",
+      display: "inline-flex",
+      alignItems: "center",
+      fontSize: 14,
+      whiteSpace: "nowrap" as const,
+    };
+
+    const dividerStyle = {
+      width: "1px",
+      height: "24px",
+      backgroundColor: "#d1d5db",
+      margin: "0 2px",
+      flexShrink: 0,
+    };
+
+    const profileLinkStyle = {
+      ...navLinkStyle,
+      backgroundColor: "#f3f4f6",
+      border: "1px solid #d1d5db",
+      fontWeight: 600,
+    };
+
      return (
-    <header style={{ height: "64px", borderBottom: "1px solid #ccc" }}>
+    <header style={{ height: "68px", borderBottom: "1px solid #ccc" }}>
          <div
             style={{
             height: "100%",
@@ -33,28 +149,70 @@ export default function Navbar() {
         >
         <img
             src="/logo.png"
-            alt="Šapa"
+            alt="Sapa"
             className="mx-auto h-10 w-auto"
             />
             
         
         </Link>
 
+        {!isLoggedIn && (
+          <Link href="/" style={navLinkStyle}>Svi oglasi</Link>
+        )}
+
+        {isLoggedIn && user?.uloga === "Vlasnik" && (
+          <nav style={{ display: "flex", gap: 10, alignItems: "center", fontSize: 14, overflowX: "auto", paddingBottom: 2 }}>
+            <Link href="/" style={navLinkStyle}>Svi oglasi</Link>
+            <div style={dividerStyle} />
+            <Link href="/oglas" style={navLinkStyle}>Dodaj oglas</Link>
+            <div style={dividerStyle} />
+            <Link href={`/profile/${user.id}#moji-ljubimci`} style={navLinkStyle}>Moji ljubimci</Link>
+            <div style={dividerStyle} />
+            <Link href={`/profile/${user.id}#moji-oglasi`} style={navLinkStyle}>Moji oglasi</Link>
+            {pendingCount > 0 && (
+              <Link href={`/profile/${user.id}#prijave-na-cekanju`} style={navLinkStyle}>
+                <div style={dividerStyle} />
+                Nove prijave
+                <Badge count={pendingCount} />
+              </Link>
+            )}
+          </nav>
+        )}
+
+        {isLoggedIn && user?.uloga === "Sitter" && (
+          <nav style={{ display: "flex", gap: 10, alignItems: "center", fontSize: 14, overflowX: "auto", paddingBottom: 2 }}>
+            <Link href="/" style={navLinkStyle}>Svi oglasi</Link>
+            <div style={dividerStyle} />
+            <Link href={`/profile/${user.id}#moje-prijave`} style={navLinkStyle}>Moje prijave</Link>
+            {sitterNotificationsCount > 0 && (
+              <Link href={`/profile/${user.id}#obavestenja`} style={navLinkStyle}>
+                <div style={dividerStyle} />
+                Obavestenja
+                <Badge count={sitterNotificationsCount} />
+              </Link>
+            )}
+          </nav>
+        )}
+
 
     {isLoggedIn ? (
-        <div style={{ position: "relative" }}>
+        <div ref={profileMenuRef} style={{ position: "relative" }}>
             <button
             onClick={() => setOpen((prev) => !prev)}
             style={{
                 height: 40,
-                width: 40,
-                borderRadius: "50%",
+                borderRadius: "20px",
                 background: "#e0e7ff",
-                border: "none",
+                border: "1px solid #c7d2fe",
                 cursor: "pointer",
+                padding: "0 10px",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
             }}
             >
                 <RiUser3Line />
+                <span style={{ fontSize: 13, fontWeight: 600, color: "#111827" }}>{user.ime}</span>
             </button>
 
         {open && (
@@ -71,9 +229,13 @@ export default function Navbar() {
             boxShadow: "0 10px 25px rgba(0,0,0,0.15)",
             }}
         >
+            <div style={{ marginBottom: "8px", borderBottom: "1px solid #e5e7eb", paddingBottom: "8px" }}>
+              <p style={{ margin: 0, fontWeight: 700, color: "#111827" }}>{user.ime}</p>
+              <p style={{ margin: 0, fontSize: 12, color: "#6b7280" }}>{user.uloga}</p>
+            </div>
             <Link href={`/profile/${user.id}`} 
-          style={{ marginBottom: "8px", fontWeight: 500,textAlign: "center", }}>
-           <p><b>{user.ime}</b></p>
+          style={{ display: "block", marginBottom: "8px", fontWeight: 500, textAlign: "center", border: "1px solid #e5e7eb", borderRadius: "8px", padding: "8px", color: "#111827", textDecoration: "none" }}>
+           Moj profil
         </Link>
             <button
             onClick={handleLogout}
@@ -101,3 +263,5 @@ export default function Navbar() {
     </header>
   );
 }
+
+

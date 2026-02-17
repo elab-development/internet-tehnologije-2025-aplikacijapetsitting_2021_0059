@@ -1,7 +1,7 @@
 import { db } from "@/db";
 import { korisnik, ljubimac, oglas, prijava, tipUsluge } from "@/db/schema";
 import { AUTH_COOKIE, verifyAuthToken } from "@/lib/auth";
-import { and, asc, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -39,7 +39,7 @@ export async function GET(req: NextRequest) {
       .leftJoin(tipUsluge, eq(oglas.idTipUsluge, tipUsluge.id))
       .leftJoin(korisnik, eq(oglas.idKorisnik, korisnik.id))
       .where(eq(prijava.idKorisnik, korisnikId))
-      .orderBy(asc(oglas.createdAt));
+      .orderBy(desc(prijava.createdAt));
 
 
     return NextResponse.json(

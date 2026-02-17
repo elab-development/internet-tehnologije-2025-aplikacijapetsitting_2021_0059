@@ -160,6 +160,7 @@ export default function ProfilePage({ params }: Props) {
       HIDDEN_NOTIFICATIONS_STORAGE_KEY,
       JSON.stringify(hiddenNotifications)
     );
+    window.dispatchEvent(new Event("hidden-notifications-updated"));
   }, [hiddenNotifications, storageReady]);
 
 async function handleDeletePet(id: string) {
@@ -240,7 +241,7 @@ async function handleDeletePrijava(id: string) {
 
       </div>
       {user.uloga == "Vlasnik" && pendingApplications.length > 0 &&(
-      <div style={{
+      <div id="prijave-na-cekanju" style={{
           padding: 20,
           backgroundColor: "#fff3cd",
           border: "1px solid #ffeeba",
@@ -266,6 +267,7 @@ async function handleDeletePrijava(id: string) {
       {user.uloga === "Vlasnik" && (
         
         <div
+          id="moji-ljubimci"
           style={{
             padding: 20,
             backgroundColor: "#fafafa",
@@ -305,6 +307,7 @@ async function handleDeletePrijava(id: string) {
 
 {user.uloga === "Vlasnik" && (
       <div
+        id="moji-oglasi"
         style={{
           padding: 20,
           backgroundColor: "#fafafa",
@@ -395,6 +398,7 @@ async function handleDeletePrijava(id: string) {
         }}
       >
         <h2>Moje prijave</h2>
+        <div id="obavestenja" />
         {sitterNotifications.length > 0 && (
           <button
             onClick={dismissAllNotifications}
@@ -461,7 +465,7 @@ async function handleDeletePrijava(id: string) {
         )}
 
         {applications.length === 0 && <p>Niste se prijavili ni na jedan oglas.</p>}
-        <div style={{ marginBottom: 15 }}>
+        <div id="moje-prijave" style={{ marginBottom: 15 }}>
           <button onClick={() => setFilter("Sve")} style={{marginTop: "10px", marginRight:"10px", paddingInline:10, paddingBlock:3, borderRadius:"8px", ...getActiveFilterButtonStyle(filter === "Sve")}}>Sve</button>
           <button onClick={() => setFilter("Na čekanju")} style={{marginTop: "10px", marginRight:"10px", paddingInline:10, paddingBlock:3, borderRadius:"8px", ...getActiveFilterButtonStyle(filter === "Na čekanju")}}>Na čekanju</button>
           <button onClick={() => setFilter("Odobreno")} style={{marginTop: "10px", marginRight:"10px", paddingInline:10, paddingBlock:3, borderRadius:"8px", ...getActiveFilterButtonStyle(filter === "Odobreno")}}>Odobreno</button>
