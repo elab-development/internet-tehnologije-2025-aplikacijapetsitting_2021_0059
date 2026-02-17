@@ -170,7 +170,12 @@ async function handleDeletePet(id: string) {
 
   if (!potvrda) return; 
 
-  await fetch(`/api/ljubimac/${id}`, { method: "DELETE" });
+  const res = await fetch(`/api/ljubimac/${id}`, { method: "DELETE" });
+  if (!res.ok) {
+    const data = await res.json().catch(() => null);
+    window.alert(data?.message ?? "Brisanje ljubimca nije uspelo.");
+    return;
+  }
   setLjubimci(prev => prev.filter(p => p.id !== id));
   
 }
@@ -181,7 +186,12 @@ async function handleDeleteAd(id: string) {
   );
 
   if (!potvrda) return; 
-  await fetch(`/api/oglas/${id}`, { method: "DELETE" });
+  const res = await fetch(`/api/oglas/${id}`, { method: "DELETE" });
+  if (!res.ok) {
+    const data = await res.json().catch(() => null);
+    window.alert(data?.message ?? "Brisanje oglasa nije uspelo.");
+    return;
+  }
   setOglasi(prev => prev.filter(o => o.id !== id));
 }
 
@@ -192,9 +202,14 @@ async function handleDeletePrijava(id: string) {
 
   if (!potvrda) return;
 
-  await fetch(`/api/prijava?id=${id}`, {
+  const res = await fetch(`/api/prijava?id=${id}`, {
     method: "DELETE",
   });
+  if (!res.ok) {
+    const data = await res.json().catch(() => null);
+    window.alert(data?.message ?? "Brisanje prijave nije uspelo.");
+    return;
+  }
 
   setApplications(prev => prev.filter(p => p.id !== id));
 }

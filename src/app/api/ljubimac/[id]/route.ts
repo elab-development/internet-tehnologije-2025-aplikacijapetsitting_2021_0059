@@ -21,8 +21,26 @@ export async function GET(req: Request, { params }: any) {
 
 //DELETE ljubimac
 export async function DELETE(req: Request, { params }: any) {
+  const token = (await cookies()).get(AUTH_COOKIE)?.value;
+  if (!token) {
+    return NextResponse.json({ message: "Niste ulogovani" }, { status: 401 });
+  }
+
+  const claims = verifyAuthToken(token);
+  const pet = await db.query.ljubimac.findFirst({
+    where: eq(ljubimac.id, params.id),
+  });
+
+  if (!pet) {
+    return NextResponse.json({ message: "Ljubimac ne postoji" }, { status: 404 });
+  }
+
+  if (pet.idKorisnik !== claims.sub) {
+    return NextResponse.json({ message: "Nemate dozvolu" }, { status: 403 });
+  }
+
   await db.delete(ljubimac).where(eq(ljubimac.id, params.id));
-  return Response.json({ success: true });
+  return NextResponse.json({ success: true });
 }
 
 //Update ljubimca pomocu PUT 
