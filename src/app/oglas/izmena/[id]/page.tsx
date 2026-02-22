@@ -2,7 +2,6 @@
 
 import { use, useEffect, useState } from "react";
 import Button from "@/app/components/Button";
-import Input from "@/app/components/Input";
 import { useAuth } from "@/app/components/AuthProvider";
 
 type Props = {
@@ -99,12 +98,23 @@ export default function IzmenaOglasaPage({ params }: Props) {
         <h2>Izmena oglasa</h2>
 
         <form onSubmit={handleSubmit}>
-          <Input
-            label="Opis"
+          <label>Opis</label>
+          <textarea
             value={form.opis}
-            onChange={(e) =>
-              setForm({ ...form, opis: e.target.value })
-            }
+            rows={6}
+            placeholder="Unesite opis oglasa..."
+            style={{
+              width: "100%",
+              height: 80,
+              resize: "vertical",
+              padding: 8,
+              marginTop: 4,
+              marginBottom: 12,
+              border: "1px solid #ccc",
+              borderRadius: 4,
+              overflowY: "auto",
+            }}
+            onChange={(e) => setForm({ ...form, opis: e.target.value })}
           />
 
           <label>Datum</label>

@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Button from "../components/Button";
-import Input from "../components/Input";
 import { view } from "drizzle-orm/sqlite-core";
 import { useAuth } from "../components/AuthProvider";
 
@@ -65,7 +64,24 @@ export default function NoviOglasPage() {
             }}>
     <form onSubmit={handleSubmit} >
       <h2>Dodavanje oglasa</h2>
-      <Input label={"Opis"} value={form.opis} onChange={(e) => setForm({ ...form, opis: e.target.value })}/>
+      <label>Opis</label>
+      <textarea
+        value={form.opis}
+        rows={6}
+        placeholder="Unesite opis oglasa..."
+        style={{
+          width: "100%",
+          height: 80,
+          resize: "vertical",
+          padding: 8,
+          marginTop: 4,
+          marginBottom: 12,
+          border: "1px solid #ccc",
+          borderRadius: 4,
+          overflowY: "auto",
+        }}
+        onChange={(e) => setForm({ ...form, opis: e.target.value })}
+      />
 <label htmlFor="">Datum</label>
 <input
   type="date"

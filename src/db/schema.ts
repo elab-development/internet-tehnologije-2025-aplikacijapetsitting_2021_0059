@@ -22,7 +22,7 @@ export const korisnik = pgTable("korisnik", {
 //Oglas
 export const oglas = pgTable("oglas", {
   id: uuid("id").primaryKey().defaultRandom(),
-  opis : varchar("opis", { length: 255 }).notNull(),
+  opis : varchar("opis", { length: 1000 }).notNull(),
   terminCuvanja: date("terminCuvanja").notNull(),
   naknada: doublePrecision("naknada").notNull(),
 

@@ -50,6 +50,13 @@
       "when": 1771784400000,
       "tag": "0006_mellow_lockheed",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1771790460005,
+      "tag": "0007_magical_vance_astro",
+      "breakpoints": true
     }
   ]
 }
