@@ -1,7 +1,7 @@
 import { db } from "@/db";
 import { korisnik, ljubimac, oglas, prijava, tipUsluge } from "@/db/schema";
 import { count } from "console";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 
 
@@ -23,7 +23,8 @@ export async function GET(req: NextRequest) {
     .leftJoin(tipUsluge, eq(oglas.idTipUsluge, tipUsluge.id))
     .leftJoin(prijava, eq(prijava.idOglas, oglas.id))
     .leftJoin(korisnik, eq(prijava.idKorisnik, korisnik.id))
-    .where(eq(oglas.idKorisnik, korisnikId));
+    .where(eq(oglas.idKorisnik, korisnikId))
+    .orderBy(desc(oglas.createdAt));
 
      const grouped = Object.values(
     data.reduce((acc, row) => {

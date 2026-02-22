@@ -134,6 +134,34 @@ export default function ProfilePage({ params }: Props) {
     fetchUser();
   }, [params]);
 
+  useEffect(() => {
+    function scrollToHashSection() {
+      const hash = window.location.hash;
+      if (!hash) return;
+
+      const sectionId = decodeURIComponent(hash.replace("#", ""));
+      const section = document.getElementById(sectionId);
+      if (!section) return;
+
+      section.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    const timeoutId = window.setTimeout(scrollToHashSection, 0);
+    window.addEventListener("hashchange", scrollToHashSection);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+      window.removeEventListener("hashchange", scrollToHashSection);
+    };
+  }, [
+    user?.id,
+    user?.uloga,
+    pets.length,
+    ads.length,
+    applications.length,
+    pendingApplications.length,
+  ]);
+
   //ucitavanje sakrivenih
   useEffect(() => {
     const raw = localStorage.getItem(HIDDEN_NOTIFICATIONS_STORAGE_KEY);
@@ -296,25 +324,61 @@ async function handleDeletePrijava(id: string) {
         {pets.length === 0 && <p>Nema dodatih ljubimaca.</p>}
         {pets?.map((pet) => (
           <div key={pet.id} style={{ padding: 20, marginTop:10, backgroundColor: "#fafafa", border: "1px solid #ccc", borderRadius:"8px"}}>
-            <p>Ime: {pet.ime}</p>
-            <p>Vrsta: {pet.tip}</p>
-            <p>Datum rođenja: {pet.datumRodjenja}</p>
-            <p>Alergije: {pet.alergije}</p>
-            <p>Lekovi: {pet.lekovi}</p>
-            <p>Ishrana: {pet.ishrana}</p>
+            <div style={{ display: "flex", gap: 16, alignItems: "flex-start", flexWrap: "wrap" }}>
+              <div style={{ flex: "0 0 220px", width: 220 }}>
+                {pet.slika ? (
+                  <img
+                    src={pet.slika}
+                    alt={`Ljubimac ${pet.ime}`}
+                    style={{
+                      width: "100%",
+                      height: 220,
+                      objectFit: "cover",
+                      borderRadius: 8,
+                      display: "block",
+                    }}
+                  />
+                ) : (
+                  <div
+                    style={{
+                      width: "100%",
+                      height: 220,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      border: "1px dashed #cbd5e1",
+                      borderRadius: 8,
+                      color: "#64748b",
+                      backgroundColor: "#f8fafc",
+                    }}
+                  >
+                    Bez slike
+                  </div>
+                )}
+              </div>
 
-            {loggedUser?.id === user.id && (
-             <>
-              <Link href={`/ljubimac/izmena/${pet.id}`}>
-                <Button text="Izmeni" />
-              </Link>
+              <div style={{ flex: "1 1 280px", minWidth: 260 }}>
+                <p>Ime: {pet.ime}</p>
+                <p>Vrsta: {pet.tip}</p>
+                <p>Datum rođenja: {pet.datumRodjenja}</p>
+                <p>Alergije: {pet.alergije}</p>
+                <p>Lekovi: {pet.lekovi}</p>
+                <p>Ishrana: {pet.ishrana}</p>
 
-              <Button
-                text="Obriši"
-                onClick={() => handleDeletePet(pet.id)}
-              />
-            </>
-          )}
+                {loggedUser?.id === user.id && (
+                 <>
+                  <Link href={`/ljubimac/izmena/${pet.id}`}>
+                    <Button text="Izmeni" />
+                  </Link>
+
+                  <Button
+                    text="Obriši"
+                    onClick={() => handleDeletePet(pet.id)}
+                  />
+                </>
+              )}
+              </div>
+            </div>
           </div>
         ))}
        </div>

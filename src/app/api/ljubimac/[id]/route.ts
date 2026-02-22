@@ -58,6 +58,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
     const {
         tip,
         ime,
+        slika,
         datumRodjenja,
         alergije,
         lekovi,
@@ -69,6 +70,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
       .set({
         tip,
         ime,
+        slika,
         datumRodjenja,
         alergije,
         lekovi,

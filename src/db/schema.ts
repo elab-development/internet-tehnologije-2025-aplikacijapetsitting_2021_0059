@@ -45,6 +45,7 @@ export const ljubimac = pgTable("ljubimac", {
   id: uuid("id").primaryKey().defaultRandom(),
   tip : varchar("tip", { length: 255 }).notNull(),
   ime : varchar("ime", { length: 255 }).notNull(),
+  slika: varchar("slika", { length: 2048 }).default(""),
   datumRodjenja: date("datumRodjenja"),
   alergije: varchar("alergije", { length: 255 }).notNull().default("/"),
   lekovi: varchar("lekovi", { length: 255 }).notNull().default("/"),
