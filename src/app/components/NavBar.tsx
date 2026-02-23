@@ -174,11 +174,13 @@ export default function Navbar() {
             <div style={dividerStyle} />
             <Link href={`/profile/${user.id}#moji-oglasi`} style={navLinkStyle}>Moji oglasi</Link>
             {pendingCount > 0 && (
-              <Link href={`/profile/${user.id}#prijave-na-cekanju`} style={navLinkStyle}>
+              <>
                 <div style={dividerStyle} />
-                Nove prijave
-                <Badge count={pendingCount} />
-              </Link>
+                <Link href={`/profile/${user.id}#prijave-na-cekanju`} style={navLinkStyle}>
+                  Nove prijave
+                  <Badge count={pendingCount} />
+                </Link>
+              </>
             )}
           </nav>
         )}
@@ -189,11 +191,13 @@ export default function Navbar() {
             <div style={dividerStyle} />
             <Link href={`/profile/${user.id}#moje-prijave`} style={navLinkStyle}>Moje prijave</Link>
             {sitterNotificationsCount > 0 && (
-              <Link href={`/profile/${user.id}#obavestenja`} style={navLinkStyle}>
+              <>
                 <div style={dividerStyle} />
-                Obavestenja
-                <Badge count={sitterNotificationsCount} />
-              </Link>
+                <Link href={`/profile/${user.id}#obavestenja`} style={navLinkStyle}>
+                  Obavestenja
+                  <Badge count={sitterNotificationsCount} />
+                </Link>
+              </>
             )}
           </nav>
         )}

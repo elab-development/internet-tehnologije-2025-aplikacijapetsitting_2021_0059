@@ -50,6 +50,9 @@ export default function ProfilePage({ params }: Props) {
   const sitterNotifications = applications
     .filter((app) => app.status === "Odobreno" || app.status === "Odbijeno")
     .filter((app) => !hiddenNotifications.includes(getNotificationKey(app)));
+  const approvedSitterHistory = applications.filter(
+    (app) => app.status === "Odobreno" && app.oglas
+  );
 
   function getApplicationStatusStyle(status: string) {
     if (status === "Odobreno") {
@@ -466,6 +469,48 @@ async function handleDeletePrijava(id: string) {
     ))}
     </div>
   )}
+    {loggedUser && loggedUser.id !== user.id && loggedUser.uloga === "Vlasnik" && user.uloga === "Sitter" && (
+      <div
+        style={{
+          padding: 20,
+          backgroundColor: "#fafafa",
+          border: "1px solid #ddd",
+          borderRadius: "10px",
+          marginBottom: "30px",
+        }}
+      >
+        <h2>Istorija cuvanja</h2>
+        <p>
+          Ovaj sitter ima <strong>{approvedSitterHistory.length}</strong> odobrenih prijava.
+        </p>
+
+        {approvedSitterHistory.length === 0 && <p>Jos nema odobrenih prijava.</p>}
+
+        {approvedSitterHistory.map((app) => (
+          <div
+            key={app.id}
+            style={{
+              backgroundColor: "#fafafa",
+              border: "1px solid #ddd",
+              borderRadius: 12,
+              padding: "12px",
+              marginBottom: "10px",
+              marginTop: "10px",
+            }}
+          >
+            <AdCard
+              key={app.oglas.id}
+              korisnik={app.oglas.vlasnik}
+              opis={app.oglas.opis}
+              ljubimac={app.oglas.ljubimac}
+              tipUsluge={app.oglas.tipUsluge}
+              terminCuvanja={app.oglas.terminCuvanja}
+              naknada={app.oglas.naknada}
+            />
+          </div>
+        ))}
+      </div>
+    )}
     {loggedUser && loggedUser.id === user.id && user.uloga === "Sitter" && (
       <div
         style={{
