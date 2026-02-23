@@ -6,6 +6,7 @@ import { korisnik, ljubimac, oglas, prijava, tipUsluge } from "./schema";
 const ownerId = "7a0a1e00-9651-4071-86b8-ed32dba35bf2";
 const sitterId = "7a0a1e00-9651-4071-86b8-ed32dba35bf3";
 const petOwnerId = "7a0a1e00-9651-4071-86b8-ed32dba35bf4";
+const adminId = "7a0a1e00-9651-4071-86b8-ed32dba35bf1";
 const petId = "7a0a1e00-9651-4071-86b8-ed32dba35bf5";
 const serviceCareId = "7a0a1e00-9651-4071-86b8-ed32dba35bf6";
 const serviceWalkId = "7a0a1e00-9651-4071-86b8-ed32dba35bf7";
@@ -22,6 +23,16 @@ await db.transaction(async (tx) => {
   await tx.delete(korisnik);
 
   await tx.insert(korisnik).values([
+    {
+      id: adminId,
+      ime: "Admin",
+      prezime: "User",
+      email: "admin@test.com",
+      lozinka: hash,
+      grad: "Beograd",
+      opstina: "Stari Grad",
+      uloga: "Admin",
+    },
     {
       id: ownerId,
       ime: "Tamara",

@@ -202,6 +202,14 @@ export default function Navbar() {
           </nav>
         )}
 
+        {!isAuthLoading && isLoggedIn && user?.uloga === "Admin" && (
+          <nav style={{ display: "flex", gap: 10, alignItems: "center", fontSize: 14, overflowX: "auto", paddingBottom: 2 }}>
+            <Link href="/" style={navLinkStyle}>Svi oglasi</Link>
+            <div style={dividerStyle} />
+            <Link href="/admin" style={navLinkStyle}>Admin dashboard</Link>
+          </nav>
+        )}
+
 
     {!isAuthLoading && isLoggedIn ? (
         <div ref={profileMenuRef} style={{ position: "relative" }}>

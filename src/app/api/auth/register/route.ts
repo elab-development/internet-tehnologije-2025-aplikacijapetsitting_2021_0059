@@ -20,6 +20,10 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Nedostaju podaci" }, { status: 400 });
   }
 
+  if (!["Vlasnik", "Sitter"].includes(uloga)) {
+    return NextResponse.json({ error: "Neispravna uloga" }, { status: 400 });
+  }
+
   const exists = await db.select().from(korisnik).where(eq(korisnik.email, email));
 
   if (exists.length) {
