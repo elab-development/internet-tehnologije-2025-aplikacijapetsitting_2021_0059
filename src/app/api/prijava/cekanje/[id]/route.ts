@@ -1,14 +1,13 @@
 import { db } from "@/db";
 import { korisnik, ljubimac, oglas, prijava } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
-  req: Request,
-  { params }: { params: { id: string } }
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
-
-    const vlasnikId = params.id;
+  const { id: vlasnikId } = await params;
   const data = await db
     .select()
     .from(prijava)

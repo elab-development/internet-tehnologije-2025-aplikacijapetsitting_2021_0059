@@ -3,7 +3,7 @@ import { Geist_Mono, Poppins } from "next/font/google";
 import "./globals.css";
 import "./styles/components.css"
 import { AuthProvider } from "./components/AuthProvider";
-import Navbar from "./components/NavBar";
+import ClientOnlyNavbar from "./components/ClientOnlyNavbar";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -32,7 +32,7 @@ export default function RootLayout({
         className={`${poppins.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>
-          <Navbar/>
+          <ClientOnlyNavbar />
           {children}
         </AuthProvider>
       </body>

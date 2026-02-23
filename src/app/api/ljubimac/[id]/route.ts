@@ -3,12 +3,13 @@ import { ljubimac } from "@/db/schema";
 import { AUTH_COOKIE, verifyAuthToken } from "@/lib/auth";
 import { eq } from "drizzle-orm";
 import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 //GET ljubimac
-export async function GET(req: Request, { params }: any) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const pet = await db.query.ljubimac.findFirst({
-    where: eq(ljubimac.id, params.id),
+    where: eq(ljubimac.id, id),
   });
 
   if (!pet) {
@@ -20,7 +21,8 @@ export async function GET(req: Request, { params }: any) {
 
 
 //DELETE ljubimac
-export async function DELETE(req: Request, { params }: any) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const token = (await cookies()).get(AUTH_COOKIE)?.value;
   if (!token) {
     return NextResponse.json({ message: "Niste ulogovani" }, { status: 401 });
@@ -28,7 +30,7 @@ export async function DELETE(req: Request, { params }: any) {
 
   const claims = verifyAuthToken(token);
   const pet = await db.query.ljubimac.findFirst({
-    where: eq(ljubimac.id, params.id),
+    where: eq(ljubimac.id, id),
   });
 
   if (!pet) {
@@ -39,13 +41,14 @@ export async function DELETE(req: Request, { params }: any) {
     return NextResponse.json({ message: "Nemate dozvolu" }, { status: 403 });
   }
 
-  await db.delete(ljubimac).where(eq(ljubimac.id, params.id));
+  await db.delete(ljubimac).where(eq(ljubimac.id, id));
   return NextResponse.json({ success: true });
 }
 
 //Update ljubimca pomocu PUT 
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+      const { id } = await params;
       const token = (await cookies()).get(AUTH_COOKIE)?.value;
   
       if (!token) {
@@ -76,7 +79,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
         lekovi,
         ishrana
       })
-      .where(eq(ljubimac.id, params.id));
+      .where(eq(ljubimac.id, id));
      
     return NextResponse.json({ message: "Ljubimac ažuriran" });
   } catch (err) {

@@ -8,6 +8,7 @@ import { useAuth } from "./AuthProvider";
 export default function Navbar() {
     const HIDDEN_NOTIFICATIONS_STORAGE_KEY = "hiddenSitterNotifications";
     const { status, user, logout } = useAuth();
+    const isAuthLoading = status === "loading";
     const isLoggedIn = status === "authenticated";
 
     const [open, setOpen] = useState(false);
@@ -107,12 +108,15 @@ export default function Navbar() {
 
     const navLinkStyle = {
       textDecoration: "none",
-      color: "#111827",
+      color: "#6b7280",
       padding: "6px 10px",
       backgroundColor: "#ffffff",
       display: "inline-flex",
       alignItems: "center",
       fontSize: 14,
+      fontWeight: 600,
+      letterSpacing: 0.8,
+      textTransform: "uppercase" as const,
       whiteSpace: "nowrap" as const,
     };
 
@@ -156,11 +160,11 @@ export default function Navbar() {
         
         </Link>
 
-        {!isLoggedIn && (
+        {status === "unauthenticated" && (
           <Link href="/" style={navLinkStyle}>Svi oglasi</Link>
         )}
 
-        {isLoggedIn && user?.uloga === "Vlasnik" && (
+        {!isAuthLoading && isLoggedIn && user?.uloga === "Vlasnik" && (
           <nav style={{ display: "flex", gap: 10, alignItems: "center", fontSize: 14, overflowX: "auto", paddingBottom: 2 }}>
             <Link href="/" style={navLinkStyle}>Svi oglasi</Link>
             <div style={dividerStyle} />
@@ -179,7 +183,7 @@ export default function Navbar() {
           </nav>
         )}
 
-        {isLoggedIn && user?.uloga === "Sitter" && (
+        {!isAuthLoading && isLoggedIn && user?.uloga === "Sitter" && (
           <nav style={{ display: "flex", gap: 10, alignItems: "center", fontSize: 14, overflowX: "auto", paddingBottom: 2 }}>
             <Link href="/" style={navLinkStyle}>Svi oglasi</Link>
             <div style={dividerStyle} />
@@ -195,7 +199,7 @@ export default function Navbar() {
         )}
 
 
-    {isLoggedIn ? (
+    {!isAuthLoading && isLoggedIn ? (
         <div ref={profileMenuRef} style={{ position: "relative" }}>
             <button
             onClick={() => setOpen((prev) => !prev)}
@@ -255,9 +259,9 @@ export default function Navbar() {
         </div>
         )}
         </div>
-        ) : (
+        ) : !isAuthLoading ? (
         <Link href="/login">Prijavi se</Link>
-        )}
+        ) : null}
 
       </div>
     </header>
