@@ -20,6 +20,8 @@
     "pg": "^8.18.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-react": "^5.31.2",
     "tsx": "^4.21.0"
   },
   "devDependencies": {
