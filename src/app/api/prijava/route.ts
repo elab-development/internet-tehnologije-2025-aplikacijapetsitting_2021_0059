@@ -100,6 +100,26 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
+  const token = (await cookies()).get(AUTH_COOKIE)?.value;
+
+  if (!token) {
+    return NextResponse.json({ message: "Niste ulogovani" }, { status: 401 });
+  }
+
+  let claimsSub: string;
+  try {
+    claimsSub = verifyAuthToken(token).sub;
+  } catch {
+    return NextResponse.json({ message: "Neispravan token" }, { status: 401 });
+  }
+
+  const authUser = await db.query.korisnik.findFirst({
+    where: eq(korisnik.id, claimsSub),
+  });
+
+  if (!authUser) {
+    return NextResponse.json({ message: "Korisnik ne postoji" }, { status: 401 });
+  }
 
   const body = await req.json();
   const { prijavaId, status } = body;
@@ -108,7 +128,22 @@ export async function PATCH(req: NextRequest) {
     .from(prijava)
     .where(eq(prijava.id, prijavaId));
 
+  if (!current.length) {
+    return NextResponse.json({ message: "Prijava ne postoji" }, { status: 404 });
+  }
+
   const idOglas = current[0].idOglas;
+  const ad = await db.query.oglas.findFirst({
+    where: eq(oglas.id, idOglas),
+  });
+
+  if (!ad) {
+    return NextResponse.json({ message: "Oglas ne postoji" }, { status: 404 });
+  }
+
+  if (authUser.uloga !== "Admin" && ad.idKorisnik !== authUser.id) {
+    return NextResponse.json({ message: "Nemate dozvolu" }, { status: 403 });
+  }
 
   if (status === "Odobreno") {
   await db

@@ -260,6 +260,19 @@ export const swaggerSpec = swaggerJSDoc({
           },
         },
       },
+      "/api/admin/applications/{id}": {
+        delete: {
+          tags: ["Admin"],
+          summary: "Brisanje prijave (admin)",
+          security: [{ cookieAuth: [] }],
+          parameters: [{ in: "path", name: "id", required: true, schema: { type: "string" } }],
+          responses: {
+            "200": { description: "Prijava je obrisana" },
+            "401": { description: "Nije autentifikovan" },
+            "403": { description: "Nema dozvolu" },
+          },
+        },
+      },
       "/api/korisnik": {
         get: {
           tags: ["Korisnik"],
@@ -517,6 +530,7 @@ export const swaggerSpec = swaggerJSDoc({
         patch: {
           tags: ["Prijava"],
           summary: "Azuriranje statusa prijave",
+          security: [{ cookieAuth: [] }],
           requestBody: {
             required: true,
             content: {
@@ -527,6 +541,9 @@ export const swaggerSpec = swaggerJSDoc({
           },
           responses: {
             "200": { description: "Status azuriran" },
+            "401": { description: "Niste ulogovani / token nije validan" },
+            "403": { description: "Nemate dozvolu" },
+            "404": { description: "Prijava ili oglas ne postoji" },
           },
         },
         delete: {
@@ -566,9 +583,12 @@ export const swaggerSpec = swaggerJSDoc({
         get: {
           tags: ["Prijava"],
           summary: "Prijave na cekanju za vlasnika",
+          security: [{ cookieAuth: [] }],
           parameters: [{ in: "path", name: "id", required: true, schema: { type: "string" } }],
           responses: {
             "200": { description: "Uspesno" },
+            "401": { description: "Niste ulogovani / token nije validan" },
+            "403": { description: "Nemate dozvolu" },
           },
         },
       },

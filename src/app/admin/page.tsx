@@ -144,6 +144,20 @@ export default function AdminPage() {
     await loadAll();
   }
 
+  async function handleDeleteApplication(id: string) {
+    if (!confirm("Da li ste sigurni da zelite da obrisete prijavu?")) return;
+    const res = await fetch(`/api/admin/applications/${id}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+    if (!res.ok) {
+      const data = await res.json().catch(() => null);
+      alert(data?.message ?? "Brisanje prijave nije uspelo.");
+      return;
+    }
+    await loadAll();
+  }
+
   if (loading || status === "loading") return <main style={{ padding: 20 }}><p>Ucitavanje...</p></main>;
   if (status !== "authenticated" || user?.uloga !== "Admin") {
     return (
@@ -250,6 +264,7 @@ export default function AdminPage() {
                 <Th>Ljubimac</Th>
                 <Th>Status</Th>
                 <Th>Datum prijave</Th>
+                <Th>Akcije</Th>
               </tr>
             </thead>
             <tbody>
@@ -260,6 +275,9 @@ export default function AdminPage() {
                   <Td>{app.oglas?.ljubimac?.ime ?? "-"}</Td>
                   <Td>{app.status}</Td>
                   <Td>{app.createdAt?.slice(0, 10)}</Td>
+                  <Td>
+                    <Button text="Obrisi" onClick={() => handleDeleteApplication(app.id)} />
+                  </Td>
                 </tr>
               ))}
             </tbody>

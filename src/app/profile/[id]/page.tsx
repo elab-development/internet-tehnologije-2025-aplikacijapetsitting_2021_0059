@@ -286,7 +286,7 @@ async function handleDeletePrijava(id: string) {
       )}
 
       </div>
-      {user.uloga == "Vlasnik" && pendingApplications.length > 0 &&(
+      {user.uloga == "Vlasnik" && loggedUser?.id === user.id && pendingApplications.length > 0 &&(
       <div id="prijave-na-cekanju" style={{
           padding: 20,
           backgroundColor: "#fff3cd",
