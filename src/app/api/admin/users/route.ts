@@ -1,6 +1,7 @@
 import { db } from "@/db";
 import { korisnik } from "@/db/schema";
 import { requireAdmin } from "@/lib/admin";
+import { ne } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
 export async function GET() {
@@ -17,8 +18,8 @@ export async function GET() {
       opstina: korisnik.opstina,
       uloga: korisnik.uloga,
     })
-    .from(korisnik);
+    .from(korisnik)
+    .where(ne(korisnik.uloga, "Admin"));
 
   return NextResponse.json(users);
 }
-

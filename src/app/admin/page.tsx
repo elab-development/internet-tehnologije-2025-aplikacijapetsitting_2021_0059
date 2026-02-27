@@ -48,7 +48,7 @@ type AdminApplication = {
   } | null;
 };
 
-const ROLE_OPTIONS = ["Vlasnik", "Sitter", "Admin"];
+const ROLE_OPTIONS = ["Vlasnik", "Sitter"];
 
 export default function AdminPage() {
   const { status, user } = useAuth();

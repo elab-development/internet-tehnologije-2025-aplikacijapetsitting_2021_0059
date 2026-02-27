@@ -56,7 +56,7 @@ export const swaggerSpec = swaggerJSDoc({
           type: "object",
           required: ["uloga"],
           properties: {
-            uloga: { type: "string", enum: ["Vlasnik", "Sitter", "Admin"] },
+            uloga: { type: "string", enum: ["Vlasnik", "Sitter"] },
           },
         },
         UserProfileUpdateBody: {
